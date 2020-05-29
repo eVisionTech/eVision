@@ -1,0 +1,1290 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta content="IE=edge" http-equiv="X-UA-Compatible">
+		<meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+		<meta content="" name="description">
+		<meta content="" name="author">
+		<title>
+			eVision 3.3.0
+		</title><!-- Bootstrap core CSS-->
+		<link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet"><!-- Custom fonts for this template-->
+		<link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"><!-- Page level plugin CSS-->
+		<link href="vendor/glyphicons/css/glyphicons.css" rel="stylesheet" type="text/css"><!-- Page level plugin CSS-->
+		<link href="vendor/bootstrap-table/bootstrap-table.css" rel="stylesheet">
+		<link href="vendor/daterangepicker/daterangepicker.css" rel="stylesheet">
+		<link href="vendor/select/bootstrap-select.min.css" rel="stylesheet">
+		
+		<link href="vendor/jquery.imgareaselect/css/imgareaselect-default.css" rel="stylesheet">
+		<link href="vendor/vis/css/vis-timeline-graph2d.min.css" rel="stylesheet">
+		
+		<!-- Custom styles for this template-->
+		<link href="css/sb-admin.css" rel="stylesheet">
+	</head>
+	<body class="fixed-nav sticky-footer bg-dark" id="page-top">
+		<!-- Navigation-->
+		<nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav">
+			<span class="appLogoContainer position-relative">
+				<img id="appLogo" class="appLogo" src="images/evision.png">
+			</span>
+			<span class="navbar-brand" id="appName">3.3</span>
+			<ul class="navbar-nav ml-auto">
+				<li class="nav-item admin-only">
+					<div class="btn-group _btn-group-sm">
+						<button class="btn" id="scanCam" data-i18n="[data-original-title]header.left.scan" title="">
+							<i class="fa fa-fw fa-video-camera"></i> 
+							<i class="camInfo fa fa-fw fa-search"></i>
+						</button> 
+						<button class="btn" data-target="#restartCamModal" data-toggle="modal" id="restartCam" data-i18n="[data-original-title]header.left.reboot" title="">
+							<i class="fa fa-fw fa-video-camera"></i> 
+							<i class="camInfo fa fa-fw fa-refresh"></i>
+						</button> 
+						<button class="btn" id="addCam" data-i18n="[data-original-title]header.left.add" title="">
+							<i class="fa fa-fw fa-video-camera"></i> 
+							<i class="camInfo fa fa-fw fa-plus"></i>
+						</button> 
+						<button class="btn" data-target="#removeCamModal" data-toggle="modal" id="removeCam" data-i18n="[data-original-title]header.left.remove" title="">
+							<i class="fa fa-fw fa-video-camera"></i> 
+							<i class="camInfo fa fa-fw fa-minus"></i>
+						</button>
+					</div>
+				</li>
+			</ul>
+			<ul class="mb-auto">
+				<li class="text-success" data-toggle="tooltip" id="cpuUsage" style="font-size: 0.85em; list-style-type: none; line-height: 1.2"></li>
+				<li class="text-success" data-toggle="tooltip" id="memUsage" style="font-size: 0.85em; list-style-type: none; line-height: 1.2"></li>
+				<li class="text-success" data-toggle="tooltip" id="driveUsage" style="font-size: 0.85em; list-style-type: none; line-height: 1.2"></li>
+			</ul><button aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler navbar-toggler-right" data-target="#navbarResponsive" data-toggle="collapse" type="button"><span class="navbar-toggler-icon"></span></button>
+			<div class="collapse navbar-collapse" id="navbarResponsive">
+				<ul class="nav nav-tabs navbar-nav navbar-sidenav" id="appTab" role="tablist">
+					<li class="nav-item" data-placement="right" data-toggle="tooltip" id="cameraNav" data-i18n="[data-original-title]navbar.camera" title="">
+						<a aria-controls="Camera" class="nav-link active" data-toggle="tab" href="#Camera" id="cameraLink" role="tab">
+							<i class="fa fa-fw fa-video-camera"></i> <span class="nav-link-text" data-i18n="navbar.camera; [title]navbar.camera">Camera</span>
+						</a>
+					</li>
+					<li class="nav-item admin-only" data-placement="right" data-toggle="tooltip" id="settingsNav" data-i18n="[data-original-title]navbar.settings" title="">
+						<a aria-controls="settings" class="nav-link" data-toggle="tab" href="#settings" id="settingsLink" role="tab">
+							<i class="fa fa-fw fa-cog"></i> <span class="nav-link-text" data-i18n="navbar.settings">Settings</span>
+						</a>
+					</li>
+					<li class="nav-item admin-only" data-placement="right" data-toggle="tooltip" id="usersNav" data-i18n="[data-original-title]navbar.users" title="">
+						<a aria-controls="usersTable" class="nav-link" data-toggle="tab" href="#usersTable" role="tab">
+							<i class="fa fa-fw fa-address-card"></i> <span class="nav-link-text" data-i18n="navbar.users">Users</span>
+						</a>
+					</li>
+					<li class="nav-item" data-placement="right" data-toggle="tooltip" data-i18n="[data-original-title]navbar.archive" title="">
+						<a aria-controls="videoArchive" class="nav-link" data-toggle="tab" href="#videoArchive" role="tab">
+							<i class="fa fa-fw fa-file-video-o"></i> <span class="nav-link-text" data-i18n="navbar.archive">Archive</span>
+						</a>
+					</li>
+					<li class="nav-item admin-only" data-placement="right" data-toggle="tooltip" data-i18n="[data-original-title]navbar.restart" title="">
+						<a class="nav-link" href="javascript:void(0);" id="rebootLink" role="button">
+							<i class="fa fa-fw fa-refresh"></i> <span class="nav-link-text" data-i18n="navbar.restart">Restart</span>
+						</a>
+					</li>
+				</ul>
+				<ul class="navbar-nav sidenav-toggler">
+					<li class="nav-item">
+						<a class="nav-link text-center" id="sidenavToggler"><i class="fa fa-fw fa-angle-left"></i></a>
+					</li>
+				</ul>
+				<ul class="navbar-nav camNav"></ul>				
+				<ul class="navbar-nav ml-auto camPreview">
+					<li class="nav-item" id="camPreview">
+						<button class="mr-lg-2 btn btn-outline-primary preview" data-i18n="[data-original-title]header.right.viewCameras" title=""><i class="fa fa-fw fa-tv"></i></button>
+					</li>
+					<li class="nav-item dropdown">
+						<button class="mr-lg-2 btn dropdown-toggle" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							<i class="fa fa-fw fa-user-circle position-relative">
+								<span class="counter-icon dot update" style="display:none"></span>
+							</i>
+						</button>
+						<ul class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown" id="userDropdownMenu">
+							<h4 class="dropdown-header" id="username">Admin</h4>
+							<li class="dropdown-item admin-only" href="#" id="commonSettings">
+								<i class="fa fa-fw fa-cog position-relative">
+									<span class="counter-icon dot update" style="display:none"></span>
+								</i>
+								<span data-i18n="header.right.settings">Settings</span>
+							</li>
+							<li class="dropdown-item admin-only" href="#" id="toggle-theme">
+								<i class="fa fa-fw fa-paint-brush"></i> 
+								<span data-i18n="header.right.themeSwitch">Switch theme</span>
+							</li>
+							<li class="dropdown-submenu dropleft p-0 admin-only" tabindex="-1">
+								<a class="dropdown-item dropdown-toggle" id="locale-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									<i class="fa fa-fw fa-globe"></i>
+									<span data-i18n="header.right.language">Language</span>
+								</a>
+								<ul class="dropdown-menu dropdown-menu-left" id="locale-menu" aria-labelledby="locale">
+									<a class="dropdown-item" data-value="en-US" href="#">English</a>
+									<a class="dropdown-item" data-value="ru-RU" href="#">Russian</a>
+								</ul>
+							</li>
+							
+							<div class="dropdown-divider"></div>
+							<a class="dropdown-item" href="/api/v1/Logout"><i class="fa fa-fw fa-sign-out"></i> <span data-i18n="header.right.logOut">Logout</span></a>
+						</ul>
+					</li>
+				</ul>
+			</div>
+		</nav>
+		<div class="content-wrapper">
+			<div class="container-fluid tab-content">
+				<div class="tab-pane active" id="Camera" role="tabpanel">
+					<div id="videoCamError" class="alert alert-info" data-i18n="tabs.camera.warning" style="display:none">
+						This device is disabled!
+					</div>
+					<div class="card card-block" id="videoContainer" style="min-height:270px">
+						<img alt="" class="card-img-top img-fluid h-100" id="videoCam">
+					</div>
+				</div>
+				<div class="tab-pane card" id="usersTable" role="tabpanel">
+					<div class="card-header font-weight-bold">
+						<i class="fa fa-fw fa-address-card"></i> 
+						<span data-i18n="tabs.users.header">Users</span>
+					</div>
+					<div class="card-body">
+						<div id="toolbar-users">
+							<button class="btn btn-success addRecUser" data-i18n="[data-original-title]tabs.users.addNew" title=""><i class="glyphicon glyphicon-plus"></i></button>
+						</div>
+						<table class="table-striped table-sm" data-cache="false" data-export-options='{"fileName": "users", "csvSeparator":";" ,"ignoreColumn": [3]}' 
+						data-id-field="id" data-i18n="[data-locale]locale" data-locale="en-US" data-pagination="true" data-query-params="queryParams" 
+						data-search="true" data-show-export="true" data-show-refresh="true" data-side-pagination="server" 
+						data-sort-name="name" data-sort-order="asc" data-toolbar="#toolbar-users" id="usersTbl"> 
+							<thead>
+								<tr>
+									<th class="text-center" data-field="date" data-width="250" data-i18n="tabs.users.th.date" data-formatter="dateFormat" data-sortable="true">
+										Date
+									</th>
+									<th class="text-center" data-field="name" data-i18n="tabs.users.th.username" data-sortable="true">
+										Username
+									</th>
+									<th class="text-center" data-field="role" data-i18n="tabs.users.th.role" data-sortable="true" data-formatter="roleFormat">
+										Role
+									</th>
+									<th class="text-center" data-field="descriptor" data-width="200" data-formatter="userActions"></th>
+								</tr>
+							</thead>
+						</table>
+					</div>
+				</div>
+				<div class="tab-pane card" id="settings" role="tabpanel">
+					<div class="card-header font-weight-bold">
+						<i class="fa fa-fw fa-cog"></i>
+						<span data-i18n="navbar.settings">Settings</span>
+					</div>
+					<div class="card-body">
+						<div class="container-fluid">
+							<form id="settings-form">
+								<div class="row flex-xl-nowrap bd-settings">
+									<div class="col-12 col-md-3 col-xl-2 pt-md-2 bd-sidebar">
+										<nav class="collapse bd-links" id="bd-nav">
+											<ul class="nav navbar-nav">
+												<li class="bd-toc-item nav-item">
+													<a class="bd-toc-link nav-link" href="#settings-camera"
+														data-i18n="settings.camera.title">
+														Camera
+													</a>
+												</li>
+												<li class="bd-toc-item nav-item">
+													<a class="bd-toc-link nav-link" href="#settings-archive"
+														data-i18n="settings.archive.title">
+														Video archive
+													</a>
+												</li>
+												<li class="bd-toc-item nav-item">
+													<a class="bd-toc-link nav-link" href="#settings-events"
+														data-i18n="settings.events.title">
+														Events
+													</a>
+												</li>
+												<li class="bd-toc-item nav-item">
+													<a class="bd-toc-link nav-link" href="#settings-voice"
+														data-i18n="settings.voice.title">
+														Voice service
+													</a>
+												</li>
+												<li class="bd-toc-item nav-item" >
+													<a class="bd-toc-link nav-link" href="#settings-cloud"
+														data-i18n="settings.cloud.title">
+														Cloud service
+													</a>
+												</li>
+											</ul>
+										</nav>
+										<div class="form-inline mt-2">
+											<button class="bd-save btn btn-success form-submit" id='settings-save' type="submit"
+												data-i18n="settings.save">Save</button>
+											<button class="btn btn-link bd-search-toggle d-md-none p-0 ml-3" type="button" data-toggle="collapse"
+												data-target="#bd-nav" aria-controls="bd-nav" aria-expanded="false" aria-label="Toggle navigation">
+												<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" role="img" focusable="false">
+													<title>Menu</title>
+													<path stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"
+														d="M4 7h22M4 15h22M4 23h22"></path>
+												</svg>
+											</button>
+										</div>
+									</div>
+									<main class="col-12 col-md-9 col-xl-10 py-md-3 bd-content" role="main" data-spy="scroll"
+										data-target="#bd-nav" data-offset="50">
+										<form action="/api/v1/Device" method="POST" id="updateSettings">
+											<div class="settings-section" id="settings-camera">
+												<h3 class="bd-title" data-i18n="settings.camera.title">Camera</h3>
+												<div class="card inner-card settings-block">
+													<div class="card-header font-weight-bold" data-i18n="settings.camera.connection.title">
+														Connection
+													</div>
+													<div class="card-body inner-card-body">
+														<div class="row flex-xl-nowrap">
+															<div class="col-12 col-md-5 col-xl-4">
+																<p class="setting-key" data-i18n="settings.camera.connection.activation">Activate</p>
+															</div>
+															<div class="col-12 col-md-7 col-xl-8 setting-value">
+																<div class="custom-control custom-switch">
+																	<input type="checkbox" class="custom-control-input" id="switchA"
+																		name="active">
+																	<label class="custom-control-label" for="switchA"></label>
+																</div>
+															</div>
+														</div>
+														<div class="row flex-xl-nowrap">
+															<div class="col-12 col-md-5 col-xl-4">
+																<p class="setting-key" data-i18n="settings.camera.connection.name.l">Name</p>
+															</div>
+															<div class="col-12 col-md-7 col-xl-8 setting-value">
+																<input class="form-control" type="text" placeholder="Enter camera name"
+																	name="device.name" data-i18n="[placeholder]settings.camera.connection.name.i">
+															</div>
+														</div>
+														<div class="row flex-xl-nowrap">
+															<div class="col-12 col-md-5 col-xl-4">
+																<p class="setting-key" data-i18n="settings.camera.connection.url.l">Network address</p>
+															</div>
+															<div class="col-12 col-md-7 col-xl-8 setting-value">
+																<input class="form-control" type="text" placeholder="Enter network address"
+																	name="device.uri" data-i18n="[placeholder]settings.camera.connection.url.i">
+															</div>
+														</div>
+													</div>
+												</div>
+												<div class="card inner-card settings-block">
+													<div class="card-header font-weight-bold" data-i18n="settings.camera.appearance.title">
+														Appearance
+													</div>
+													<div class="card-body inner-card-body">
+														<div class="row flex-xl-nowrap">
+															<div class="col-12 col-md-5 col-xl-4">
+																<p class="setting-key" data-i18n="settings.camera.appearance.resize">Resize</p>
+															</div>
+															<div class="col-12 col-md-7 col-xl-8 setting-value">
+																<select class="selectpicker" name="video.resize">
+																	<option value="">Original</option>
+																	<option value="320x240">320x240</option>
+																	<option value="640x480">640x480</option>
+																	<option value="1280x720">1280x720</option>
+																</select>
+															</div>
+														</div>
+														<div class="row flex-xl-nowrap">
+															<div class="col-12 col-md-5 col-xl-4">
+																<p class="setting-key" data-i18n="settings.camera.appearance.crop.l">Crop</p>
+															</div>
+															<div class="col-12 col-md-7 col-xl-8 setting-value">
+																<input class="form-control" type="text" placeholder="Enter crop" name="video.crop"
+																	data-i18n="[placeholder]settings.camera.appearance.crop.i" id="crop">
+															</div>
+														</div>
+														<div class="row flex-xl-nowrap">
+															<div class="col-12 col-md-5 col-xl-4">
+																<p class="setting-key" data-i18n="settings.camera.appearance.rate">Framerate</p>
+															</div>
+															<div class="col-12 col-md-7 col-xl-8 setting-value">
+																<select class="selectpicker" name="video.framerate" id="framerateSelector">
+																	<option value="">Original</option>
+																	<option value="1">1</option>
+																	<option value="2">2</option>
+																	<option value="3">3</option>
+																	<option value="4">4</option>
+																	<option value="5">5</option>
+																</select>
+															</div>
+														</div>
+													</div>
+												</div>
+												<div class="card inner-card settings-block">
+													<div class="card-header font-weight-bold" data-i18n="settings.camera.ftp.title">
+														Receiving images via FTP
+													</div>
+													<div class="card-body inner-card-body">
+														<div class="row flex-xl-nowrap">
+															<div class="col-12 col-md-5 col-xl-4">
+																<p class="setting-key" data-i18n="settings.camera.ftp.enable">Enable</p>
+															</div>
+															<div class="col-12 col-md-7 col-xl-8 setting-value">
+																<div class="custom-control custom-switch">
+																	<input type="checkbox" class="custom-control-input" id="switchEFTP"
+																		name="ftp.enable">
+																	<label class="custom-control-label" for="switchEFTP"></label>
+																</div>
+															</div>
+														</div>
+														<div class="row flex-xl-nowrap">
+															<div class="col-12 col-md-5 col-xl-4">
+																<p class="setting-key" data-i18n="settings.camera.ftp.port.l">FTP port</p>
+															</div>
+															<div class="col-12 col-md-7 col-xl-8 setting-value">
+																<input class="form-control" type="text" placeholder="Enter FTP port"
+																	name="ftp.port" data-i18n="[placeholder]settings.camera.ftp.port.i">
+															</div>
+														</div>
+													</div>
+												</div>
+												<div class="card inner-card settings-block">
+													<div class="card-header font-weight-bold" data-i18n="settings.camera.motion.title">
+														Motion detection
+													</div>
+													<div class="card-body inner-card-body">
+														<div class="row flex-xl-nowrap">
+															<div class="col-12 col-md-5 col-xl-4">
+																<p class="setting-key" data-i18n="settings.camera.motion.enable">Enable</p>
+															</div>
+															<div class="col-12 col-md-7 col-xl-8 setting-value">
+																<div class="custom-control custom-switch">
+																	<input type="checkbox" class="custom-control-input" id="switchMD"
+																		name="motionDetection.enable">
+																	<label class="custom-control-label" for="switchMD"></label>
+																</div>
+															</div>
+														</div>
+														<div class="row flex-xl-nowrap">
+															<div class="col-12 col-md-5 col-xl-4">
+																<p class="setting-key" data-i18n="settings.camera.motion.sensitivity">Sensitivity</p>
+															</div>
+															<div class="col-12 col-md-7 col-xl-8 setting-value">
+																<select class="selectpicker" name="motionDetection.threshold">
+																	<option value="1" data-i18n="settings.camera.motion.sValues.max">Maximum (default)</option>
+																	<option value="2" data-i18n="settings.camera.motion.sValues.high">High</option>
+																	<option value="3" data-i18n="settings.camera.motion.sValues.average">Average</option>
+																	<option value="4" data-i18n="settings.camera.motion.sValues.low">Low</option>
+																	<option value="5" data-i18n="settings.camera.motion.sValues.min">Minimum</option>
+																</select>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="settings-section" id="settings-archive">
+												<h3 class="bd-title" data-i18n="settings.archive.title">Video archive</h3>
+												<div class="card inner-card settings-block">
+													<div class="card-header font-weight-bold" data-i18n="settings.archive.recording.title">
+														Recording
+													</div>
+													<div class="card-body inner-card-body">
+														<div class="row flex-xl-nowrap">
+															<div class="col-12 col-md-5 col-xl-4">
+																<p class="setting-key" data-i18n="settings.archive.recording.enable">Enable video recording</p>
+															</div>
+															<div class="col-12 col-md-7 col-xl-8 setting-value">
+																<div class="custom-control custom-switch">
+																	<input type="checkbox" class="custom-control-input" id="switchEVR"
+																		name="videoRecording.enable">
+																	<label class="custom-control-label" for="switchEVR"></label>
+																</div>
+															</div>
+														</div>
+														<div class="row flex-xl-nowrap">
+															<div class="col-12 col-md-5 col-xl-4">
+																<p class="setting-key" data-i18n="settings.archive.recording.url.l">Network address</p>
+															</div>
+															<div class="col-12 col-md-7 col-xl-8 setting-value">
+																<input class="form-control" type="text" placeholder="Enter network address"
+																	name="videoRecording.uri" data-i18n="[placeholder]settings.archive.recording.url.i">
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="settings-section" id="settings-events">
+												<h3 class="bd-title" data-i18n="settings.events.title">Events</h3>												
+												<div class="card inner-card settings-block">
+													<div class="card-header font-weight-bold" data-i18n="settings.events.control.title">
+														Event control
+													</div>
+													<div class="card-body inner-card-body">
+														<div class="row flex-xl-nowrap" id="settings-timeout">
+															<div class="col-12 col-md-5 col-xl-4">
+																<p class="setting-key" data-i18n="settings.events.control.timeout">Event timeout (sec)</p>
+															</div>
+															<div class="col-12 col-md-7 col-xl-8 setting-value settings-range">
+																<output style="width: 3rem" id="outputET">10</output>
+																<input type="range" min="0" max="60" class="form-control" id="inputET" required
+																	oninput="outputET.value = inputET.value;" value="10" name="event.timeout">
+															</div>
+														</div>
+
+														<div class="accordion" id="accordionEvents">
+															<div class="card inner-card settings-block">
+																<div class="card-header collapsed font-weight-bold" id="toggleLock" data-toggle="collapse" data-target="#collapseLock" aria-expanded="true" aria-controls="collapseLock">
+																	<i class="fa fa-fw fa-chevron-right"></i>
+																	<i class="fa fa-fw fa-chevron-down"></i>
+																	<span data-i18n="settings.events.lock.title">Lock control</span>
+																</div>
+																<div class="card-body inner-card-body collapse" id="collapseLock" aria-labelledby="toggleLock" data-parent="#accordionEvents">
+																	<div class="row flex-xl-nowrap">
+																		<div class="col-12 col-md-5 col-xl-4">
+																			<p class="setting-key" data-i18n="settings.events.lock.deviceType"> Device type</p>
+																		</div>
+																		<div class="col-12 col-md-7 col-xl-8 setting-value">
+																			<select class="selectpicker" id="settings-device" name="device.type">
+																				<option value="Beward" data-i18n="devices.bewardSeries">Beward (B series, DS
+																					series)
+																				</option>
+																				<option value="Beward_DKS15120">Beward (DKS15120)</option>
+																				<option value="Beward_DKS15122">Beward (DKS15122)</option>
+																				<option value="Beward_DS06M">Beward (DS06M)</option>
+																				<option value="Dahua">Dahua (VTO2101E-P)</option>
+																				<option value="Nateks">Nateks (FG-ACE-VC-2HD)</option>
+																				<option value="Rodos">Rodos (8-10)</option>
+																				<option value="SIGUR" data-i18n="devices.sigur">SIGUR (Rostov-Don IP)</option>
+																				<option value="TETA">TETA (Z3X-2IR-PL)</option>
+																				<option value="TrueIP">True IP (TI-3611CRW)</option>
+																				<option value="...">...</option>
+																			</select>
+																		</div>
+																	</div>														
+																	<div class="row flex-xl-nowrap device-custom" id="settings-url">
+																		<div class="col-12 col-md-5 col-xl-4">
+																			<p class="setting-key" data-i18n="settings.events.lock.url.l">Network address</p>
+																		</div>
+																		<div class="col-12 col-md-7 col-xl-8 setting-value">
+																			<input class="form-control" type="text" placeholder="Enter network address"
+																				name="relay.uri" data-i18n="[placeholder]settings.events.lock.url.i">
+																		</div>
+																	</div>
+																	<div class="row flex-xl-nowrap device-custom" id="settings-port">
+																		<div class="col-12 col-md-5 col-xl-4">
+																			<p class="setting-key" data-i18n="settings.events.lock.port.l">Port</p>
+																		</div>
+																		<div class="col-12 col-md-7 col-xl-8 setting-value">
+																			<input class="form-control" type="text" placeholder="Enter port"
+																				name="relay.port" data-i18n="[placeholder]settings.events.lock.port.i">
+																		</div>
+																	</div>
+																	<div class="row flex-xl-nowrap device-custom" id="settings-login">
+																		<div class="col-12 col-md-5 col-xl-4">
+																			<p class="setting-key" data-i18n="settings.events.lock.login.l">Login</p>
+																		</div>
+																		<div class="col-12 col-md-7 col-xl-8 setting-value">
+																			<input class="form-control" type="text" placeholder="Enter login"
+																				name="relay.username" data-i18n="[placeholder]settings.events.lock.login.i">
+																		</div>
+																	</div>
+																	<div class="row flex-xl-nowrap device-custom" id="settings-password">
+																		<div class="col-12 col-md-5 col-xl-4">
+																			<p class="setting-key" data-i18n="settings.events.lock.password.l">Password</p>
+																		</div>
+																		<div class="col-12 col-md-7 col-xl-8 setting-value">
+																			<input class="form-control" type="password" placeholder="Enter password" id="lockPassword"
+																				name="relay.password" data-i18n="[placeholder]settings.events.lock.password.i">
+																			<span class="fa fa-fw toggle-password fa-eye-slash" toggle="#lockPassword"></span>
+																		</div>
+																	</div>
+																	<div class="row flex-xl-nowrap device-custom" id="settings-id">
+																		<div class="col-12 col-md-5 col-xl-4">
+																			<p class="setting-key" data-i18n="settings.events.lock.id.l">Device ID</p>
+																		</div>
+																		<div class="col-12 col-md-7 col-xl-8 setting-value">
+																			<input class="form-control" type="text" placeholder="Enter device ID"
+																				name="relay.deviceId" data-i18n="[placeholder]settings.events.lock.id.i">
+																		</div>
+																	</div>
+																	<div class="row flex-xl-nowrap device-custom" id="settings-channel">
+																		<div class="col-12 col-md-5 col-xl-4">
+																			<p class="setting-key" data-i18n="settings.events.lock.channel">Channel</p>
+																		</div>
+																		<div class="col-12 col-md-7 col-xl-8 setting-value">
+																			<select class="selectpicker" name="relay.direction">
+																				<option value="1">1</option>
+																				<option value="2">2</option>
+																				<option value="3">3</option>
+																				<option value="4">4</option>
+																			</select>
+																		</div>
+																	</div>
+																	<div class="row flex-xl-nowrap device-custom" id="settings-direction">
+																		<div class="col-12 col-md-5 col-xl-4">
+																			<p class="setting-key" data-i18n="settings.events.lock.direction">Direction</p>
+																		</div>
+																		<div class="col-12 col-md-7 col-xl-8 setting-value">
+																			<select class="selectpicker" name="relay.direction">
+																				<option value="IN">In</option>
+																				<option value="OUT">Out</option>
+																			</select>
+																		</div>
+																	</div>
+																	<div class="row flex-xl-nowrap device-custom" id="settings-token">
+																		<div class="col-12 col-md-5 col-xl-4">
+																			<p class="setting-key" data-i18n="settings.events.lock.token.l">Token</p>
+																		</div>
+																		<div class="col-12 col-md-7 col-xl-8 setting-value">
+																			<input class="form-control" type="text" placeholder="Enter token"
+																				name="relay.token"
+																				data-i18n="[placeholder]settings.events.lock.token.i">
+																		</div>
+																	</div>
+																	<div class="row flex-xl-nowrap device-custom" id="settings-time">
+																		<div class="col-12 col-md-5 col-xl-4">
+																			<p class="setting-key" data-i18n="settings.events.lock.time">Unlock time (sec)</p>
+																		</div>
+																		<div class="col-12 col-md-7 col-xl-8 setting-value settings-range">
+																			<output style="width: 3rem" id="outputDT">10</output>
+																			<input type="range" min="0" max="60" class="form-control" id="inputDT" required
+																				oninput="outputDT.value = inputDT.value;" value="10" name="relay.keepOpenTimeout">
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>																								
+												<div class="card inner-card settings-block">
+													<div class="card-header font-weight-bold" data-i18n="settings.events.schedule.title">
+														Access control schedule
+													</div>
+													<div class="card-body inner-card-body">
+														<div class="row flex-xl-nowrap">
+															<div class="col-12 col-md-5 col-xl-4">
+																<p class="setting-key" data-i18n="settings.events.schedule.hours">Working hours</p>
+															</div>
+															<div class="col-12 col-md-7 col-xl-8 setting-value">
+																<input class="form-control" type="text" placeholder="HH:MM-HH:MM"
+																	name="event.time">
+															</div>
+														</div>
+														<div class="row flex-xl-nowrap">
+															<div class="col-12 col-md-5 col-xl-4">
+																<p class="setting-key" data-i18n="settings.events.schedule.weekends">Disable on weekends</p>
+															</div>
+															<div class="col-12 col-md-7 col-xl-8 setting-value">
+																<div class="custom-control custom-switch">
+																	<input type="checkbox" class="custom-control-input" id="switchEW"
+																		name="event.weekend">
+																	<label class="custom-control-label" for="switchEW"></label>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="settings-section" id="settings-voice">
+												<h3 class="bd-title" data-i18n="settings.voice.title">Voice service</h3>
+												<div class="card inner-card settings-block">
+													<div class="card-header font-weight-bold"
+														data-i18n="settings.voice.notifications.title">
+														Voice notifications
+													</div>
+													<div class="card-body inner-card-body">
+														<div class="row flex-xl-nowrap">
+															<div class="col-12 col-md-5 col-xl-4">
+																<p class="setting-key" data-i18n="settings.voice.notifications.enable">Enable</p>
+															</div>
+															<div class="col-12 col-md-7 col-xl-8 setting-value">
+																<div class="custom-control custom-switch">
+																	<input type="checkbox" class="custom-control-input" id="switchEVN"
+																		name="notif.enable">
+																	<label class="custom-control-label" for="switchEVN"></label>
+																</div>
+															</div>
+														</div>
+														<div class="accordion" id="accordionVoiceNotifications">
+															<div class="card inner-card settings-block">
+																<div class="card-header collapsed font-weight-bold" id="toggleMotionNotifications" data-toggle="collapse" data-target="#collapseMotionNotifications" aria-expanded="true" aria-controls="collapseMotionNotifications">
+																	<i class="fa fa-fw fa-chevron-right"></i>
+																	<i class="fa fa-fw fa-chevron-down"></i>
+																	<span data-i18n="settings.voice.notifications.motion.title">Motion detector</span>
+																</div>
+																<div class="card-body inner-card-body collapse" id="collapseMotionNotifications" aria-labelledby="toggleMotionNotifications" data-parent="#accordionVoiceNotifications">
+																	<div class="row flex-xl-nowrap">
+																		<div class="col-12 col-md-5 col-xl-4">
+																			<p class="setting-key" data-i18n="settings.voice.notifications.motion.enable">Enable</p>
+																		</div>
+																		<div class="col-12 col-md-7 col-xl-8 setting-value">
+																			<div class="custom-control custom-switch">
+																				<input type="checkbox" class="custom-control-input" id="switchEMN"
+																					name="notif.motionDetection.enable">
+																				<label class="custom-control-label" for="switchEMN"></label>
+																			</div>
+																		</div>
+																	</div>
+																	<div class="row flex-xl-nowrap" id="settings-MN">
+																		<div class="col-12 col-md-5 col-xl-4">
+																			<p class="setting-key" data-i18n="settings.voice.notifications.notificationMode.t">Notification mode</p>
+																		</div>
+																		<div class="col-12 col-md-7 col-xl-8 setting-value">
+																			<select class="selectpicker" name="notif.motionDetection.notifMode">
+																				<option value="phrase" data-i18n="settings.voice.notifications.notificationMode.p">Phrase
+																				</option>
+																				<option value="file" data-i18n="settings.voice.notifications.notificationMode.f">File
+																				</option>
+																			</select>
+																		</div>
+																	</div>
+																	<div class="row flex-xl-nowrap MN-custom" id="settings-MNPhrase">
+																		<div class="col-12 col-md-5 col-xl-4">
+																			<p class="setting-key" data-i18n="settings.voice.notifications.phrase.l">Phrase</p>
+																		</div>
+																		<div class="col-12 col-md-7 col-xl-8 setting-value">
+																			<input class="form-control" type="text" placeholder="Enter phrase"
+																				name="notif.motionDetection.phrase" maxlength="60"
+																				data-i18n="[placeholder]settings.voice.notifications.phrase.i">
+																		</div>
+																	</div>
+																	<div class="row flex-xl-nowrap MN-custom" id="settings-MNAudio">
+																		<div class="col-12 col-md-5 col-xl-4">
+																			<p class="setting-key" data-i18n="settings.voice.notifications.file.l">Audio file</p>
+																		</div>
+																		<div class="col-12 col-md-7 col-xl-8 setting-value">
+																			<div class="custom-file">
+																				<input type="file" accept="audio/*" class="custom-file-input" id="inputMotionAudioNotification">
+																				<label class="custom-file-label" for="inputMotionAudioNotification" data-i18n="settings.voice.notifications.file.i">Select file</label>
+																			</div>
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="settings-section" id="settings-cloud">
+												<h3 class="bd-title" data-i18n="settings.cloud.title">Cloud service</h3>
+												<div class="card inner-card settings-block">
+													<div class="card-header font-weight-bold" data-i18n="settings.cloud.connection.title">
+														Connection
+													</div>
+													<div class="card-body inner-card-body">
+														<div class="row flex-xl-nowrap">
+															<div class="col-12 col-md-5 col-xl-4">
+																<p class="setting-key" data-i18n="settings.cloud.connection.activation">Activation</p>
+															</div>
+															<div class="col-12 col-md-7 col-xl-8 setting-value">
+																<div class="custom-control custom-switch">
+																	<input type="checkbox" class="custom-control-input" id="switchS" name="cloud.enable">
+																	<label class="custom-control-label" for="switchS"></label>
+																</div>
+															</div>
+														</div>
+														<div class="row flex-xl-nowrap" id="settings-reg" style="display:none">
+															<div class="col-12 col-md-5 col-xl-4">
+																<p class="setting-key" data-i18n="settings.cloud.connection.register.l">Registration</p>
+															</div>
+															<div class="col-12 col-md-7 col-xl-8 setting-value">
+																<button class="btn btn-primary" id="regDevice" data-i18n="settings.cloud.connection.register.i">Register device</button>
+															</div>
+														</div>
+														<div class="row flex-xl-nowrap object-custom" id="settings-camId" style="display:none">
+															<div class="col-12 col-md-5 col-xl-4">
+																<p class="setting-key" data-i18n="settings.cloud.connection.id">Device ID</p>
+															</div>
+															<div class="col-12 col-md-7 col-xl-8 setting-value">
+																<input class="form-control" type="text" placeholder="Device ID"
+																	name="id" disabled>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</form>
+									</main>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+				<div class="tab-pane card" id="videoArchive" role="tabpanel">
+					<div class="card-header font-weight-bold">
+						<i class="fa fa-fw fa-file-video-o"></i>
+						<span data-i18n="tabs.archive.header">Video archive</span>
+					</div>
+					<div class="card-body">
+						<div class="archive-toolbar row mt-3 mx-0">
+							<div class="form-group col-md-3">
+								<select class="selectpicker form-control my-1" id="videoSourceSelector">
+									<option selected disabled="disabled" data-i18n="tabs.archive.selectSource"> -- Select source --</option>
+								</select>
+								<input class="form-control my-1" id="datepicker-archive" name="archive-date" type="text">
+							</div>
+							<div class="col-md-9">
+								<div id="timeslider" class="form-group"></div>
+							</div>
+						</div>
+						<div class="video-container p-md-3" id="videoPlayer1" style="min-height:260px">
+							<video autoplay="" controls="" id="video1" class="w-100 h-100"><source id="source1" type="video/mp4"></video>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<footer class="sticky-footer">
+			<div class="container">
+				<div class="text-center">
+					<small>Copyright © Digt-Telecom 2020</small>
+				</div>
+			</div>
+		</footer>		
+		<!-- Scroll to Top Button-->
+
+		<div class="modal" id="loadingModal" tabindex="-1" data-backdrop="static" data-keyboard="false" role="dialog">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" data-i18n="modal.wait.title">Please wait...</h5>
+					</div>
+					<div class="modal-body">
+						<div class="d-flex justify-content-center" style="top: 40%;" role="document">
+							<span class="fa fa-fw fa-spinner fa-pulse fa-3x"></span>
+						</div>
+						<div id="loadingModalText" style="text-align: center;"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<!-- Info Modal-->
+		<div class="modal" id="infoModal" role="dialog" tabindex="-1">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" data-i18n="modal.info.title">
+							Info
+						</h5><button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true">&times;</span></button>
+					</div>
+					<div class="modal-body">
+						<p>
+							Modal body text goes here.
+						</p>
+					</div>
+					<div class="modal-footer">						
+						<button class="btn btn-secondary" data-dismiss="modal" id="infoModalClose" type="button" data-i18n="buttons.close">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- System Resources Modal-->
+		<div class="modal" id="systemResModal" role="dialog" tabindex="-1">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" data-i18n="modal.info.title">
+							Info
+						</h5><button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true">&times;</span></button>
+					</div>
+					<div class="modal-body">
+						<p>
+							Modal body text goes here.
+						</p>
+					</div>
+					<div class="modal-footer">						
+						<button class="btn btn-secondary" data-dismiss="modal" id="systemResClose" type="button" data-i18n="buttons.ok">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Logout Modal-->
+		<div aria-hidden="true" aria-labelledby="logoutModalLabel" class="modal fade" id="logoutModal" role="dialog" tabindex="-1">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="logoutModalLabel" data-i18n="modal.logout.title">
+							Are you sure?
+						</h5><button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true">×</span></button>
+					</div>
+					<div class="modal-body" data-i18n="modal.logout.body">
+						Select Exit if you are ready to end the current session
+					</div>
+					<div class="modal-footer">
+						<a class="btn btn-outline-primary" href="/api/v1/Logout" data-i18n="buttons.exit">Logout</a>
+						<button class="btn btn-secondary" data-dismiss="modal" type="button" data-i18n="buttons.cancel">Cancel</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<!-- Remove Cam Modal-->
+		<div aria-hidden="true" aria-labelledby="removeCamModalLabel" class="modal fade" id="removeCamModal" role="dialog" tabindex="-1">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="removeCamModalLabel" data-i18n="modal.removeCam.title">
+							Remove device?
+						</h5><button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true">×</span></button>
+					</div>
+					<div class="modal-body" data-i18n="modal.removeCam.body">
+						Select "Remove" if you are ready to remove the device
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-danger removeCamBtn" type="button" data-i18n="buttons.remove">Remove</button>
+						<button class="btn btn-secondary" data-dismiss="modal" type="button" data-i18n="buttons.cancel">Cancel</button> 
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<!-- Reboot Cam Modal-->
+		<div aria-hidden="true" aria-labelledby="rebootCamModalLabel" class="modal fade" id="restartCamModal" role="dialog" tabindex="-1">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="rebootCamModalLabel" data-i18n="modal.rebootCam.title">
+							Reboot device?
+						</h5><button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true">×</span></button>
+					</div>
+					<div class="modal-body" data-i18n="modal.rebootCam.body">
+						Select "OK" if you are ready to reboot the device
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-success restartCamBtn" type="button" data-i18n="buttons.ok">OK</button> 
+						<button class="btn btn-secondary" data-dismiss="modal" type="button" data-i18n="buttons.cancel">Cancel</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<!-- Restart Modal-->
+		<div aria-hidden="true" aria-labelledby="restartModalLabel" class="modal fade" id="restartModal" role="dialog" tabindex="-1">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="restartModalLabel" data-i18n="modal.restart.title">
+							Restarting. Are you sure?
+						</h5><button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true">×</span></button>
+					</div>
+					<div class="modal-body" data-i18n="modal.restart.body">
+						Select "OK" if you are ready to restart the system
+					</div>
+					<div class="modal-footer">
+						<a class="btn btn-success" href="/api/v1/Restart" data-i18n="buttons.ok">ОК</a> 
+						<button class="btn btn-secondary" data-dismiss="modal" type="button" data-i18n="buttons.cancel">Cancel</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<!-- Edit User Modal-->
+		<div class="modal fade" id="editRecordUserModal" tabindex="-1" role="dialog" aria-labelledby="editRecordUserModalLabel"
+			aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="editRecordUserModalLabel"data-i18n="modal.addUser.title">
+							Add new user</h5>
+						<button class="close" type="button" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">×</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<form id="editRecordUserForm" role="form" data-toggle="validator">
+							<input type="hidden" name="id"></input>
+							<div class="form-group">
+								<label for="selectRole" id="inputFaceRoleLabel" data-i18n="modal.addUser.role.l">Role</label>
+								<select name="role" class="selectpicker selectRole form-control" data-i18n="[placeholder]modal.addUser.role.i"
+									placeholder="Choose role">
+								</select>
+							</div>
+							<div class="form-group">
+								<label for="inputFaceName" id="inputFaceNameLabel" data-i18n="modal.addUser.username.l">Username</label>
+								<input name="username" type="text" class="form-control required" id="inputFaceName"
+									data-i18n="[placeholder]modal.addUser.username.i" placeholder="Enter username" maxlength="20">
+							</div>
+							<div class="form-group">
+								<label for="inputFacePassword" id="inputFacePasswordLabel" data-i18n="modal.addUser.pass.l">Password</label>
+								<input name="password" type="password" class="form-control required" id="inputFacePassword"
+									data-i18n="[placeholder]modal.addUser.pass.i" placeholder="••••••" maxlength="20">
+								<span class="fa fa-fw toggle-password fa-eye-slash" toggle="#inputFacePassword"></span>
+							</div>
+						</form>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-success userForm-submit" type="button" data-i18n="buttons.apply">Apply</button>
+						<button class="btn btn-secondary" data-dismiss="modal" type="button" data-i18n="buttons.cancel">Cancel</button> 
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Remove Record Modal2-->
+		<div class="modal fade" id="removeModalUser" tabindex="-1" role="dialog" aria-labelledby="removeModal2Label"
+		aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="removeModalLabel" data-i18n="modal.removeRecord.user.t">
+							Remove user?
+						</h5><button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true">×</span></button>
+					</div>
+					<div class="modal-body" data-i18n="modal.removeRecord.user.b">
+						Select "Remove" if you are ready to remove the user
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-danger removeSubmitUserBtn" type="button" data-i18n="buttons.remove">Remove</button> 
+						<button class="btn btn-secondary" data-dismiss="modal" type="button" data-i18n="buttons.cancel">Cancel</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Scan Devices Modal-->
+		<div aria-hidden="true" aria-labelledby="scanCamModalLabel" class="modal fade" id="scanCamModal" role="dialog" tabindex="-1">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="scanCamModalLabel" data-i18n="modal.scanDevices.title">
+							Scan devices
+						</h5><button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true">×</span></button>
+					</div>
+					<div class="modal-body">
+						<form data-toggle="validator" id="scanCamForm" name="scanCamForm" role="form">
+							<label id="scanReady" data-i18n="modal.scanDevices.scanReady">To start scanning, click "Scan"!</label>
+							<div class="form-group" id="scanInputDeviceDiv">
+								<label for="scanDevice" data-i18n="modal.scanDevices.labelDevice">Device</label> 
+								<select class="form-control" id="scanDevice">
+									<option disabled selected data-i18n="modal.scanDevices.selectDevice">
+										-- Select device --
+									</option>
+								</select>
+							</div>
+							<div class="form-group" id="scanInputDeviceTypeDiv">
+								<label for="scanInputDevice" data-i18n="modal.scanDevices.labelModel">Model</label> 
+								<select class="form-control" id="scanInputDevice">
+									<option disabled selected data-i18n="modal.scanDevices.selectModel">
+										-- Select model --
+									</option>
+									<option data-i18n="devices.bewardSeries">
+										Beward (B series, DS series)
+									</option>
+									<option>
+										Beward (DKS15120)
+									</option>
+									<option>
+										Beward (DKS15122)
+									</option>
+									<option>
+										Beward (DS06M)
+									</option>
+									<option>
+										Dahua (VTO2101E-P)
+									</option>
+									<option>
+										Nateks (FG-ACE-VC-2HD)
+									</option>
+									<option>
+										TETA (Z3X-2IR-PL)
+									</option>
+									<option>
+										True IP (TI-3611CRW)
+									</option>
+									<option>
+										...
+									</option>
+								</select>
+							</div>
+							<div class="form-group" id="scanInputDeviceNameDiv">
+								<label for="scanInputDeviceName" data-i18n="modal.scanDevices.name.l">Device name</label> 
+								<input class="form-control" id="scanInputDeviceName" data-i18n="[placeholder]modal.scanDevices.name.i" placeholder="Enter device name" type="text">
+							</div>
+							<div class="form-group" id="scanInputIPAdressDeviceDiv">
+								<label for="scanInputIPAdressDevice" data-i18n="modal.scanDevices.IP.l">Device IP</label> 
+								<input class="form-control" id="scanInputIPAdressDevice" data-i18n="[placeholder]modal.scanDevices.IP.i" placeholder="Enter device IP" required="" type="text">
+							</div>
+							<div class="form-group" id="scanInputLoginDeviceDiv">
+								<label for="scanInputLoginDevice" data-i18n="modal.scanDevices.login.l">Login</label> 
+								<input class="form-control" id="scanInputLoginDevice" data-i18n="[placeholder]modal.scanDevices.login.i" placeholder="Enter login" type="text">
+							</div>
+							<div class="form-group" id="scanInputPasswordDeviceDiv">
+								<label for="scanInputPasswordDevice" data-i18n="modal.scanDevices.password.l">Password</label> 
+								<input class="form-control" id="scanInputPasswordDevice" data-i18n="[placeholder]modal.scanDevices.password.i" placeholder="Enter password" type="password">
+								<span class="fa fa-fw toggle-password fa-eye-slash" toggle="#scanInputPasswordDevice"></span>
+							</div>
+						</form>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-success form-submit" id='addScanCamM' type="submit" data-i18n="buttons.add">Add</button> 
+						<button class="btn btn-info form-submit" id='scanCamM' type="submit">
+							<span data-i18n="buttons.scan">Scan</span>
+							<img height="25" id="loaderGif" src="images/loading.gif">
+						</button>
+						<button class="btn btn-secondary" data-dismiss="modal" type="button" data-i18n="buttons.cancel">Cancel</button> 
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Add Cam Modal-->
+		<div aria-hidden="true" aria-labelledby="addCamModalLabel" class="modal fade" id="addCamModal" role="dialog" tabindex="-1">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="addCamModalLabel" data-i18n="modal.addCam.title">
+							Add device
+						</h5><button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true">×</span></button>
+					</div>
+					<div class="modal-body">
+						<form data-toggle="validator" id="addCamForm" name="addCamForm" role="form">
+							<div class="form-group">
+								<label for="inputDevice" data-i18n="modal.addCam.labelDevice">Device</label> 
+								<select class="form-control" id="inputDevice">
+									<option disabled selected data-i18n="modal.addCam.selectDevice">
+										-- Select device --
+									</option>
+									<option data-i18n="devices.bewardSeries">
+										Beward (B series, DS series)
+									</option>
+									<option>
+										Beward (DKS15120)
+									</option>
+									<option>
+										Beward (DKS15122)
+									</option>
+									<option>
+										Beward (DS06M)
+									</option>
+									<option>
+										Dahua (VTO2101E-P)
+									</option>
+									<option>
+										Nateks (FG-ACE-VC-2HD)
+									</option>
+									<option>
+										TETA (Z3X-2IR-PL)
+									</option>
+									<option>
+										TRASSIR Cloud
+									</option>
+									<option>
+										True IP (TI-3611CRW)
+									</option>
+									<option id="webcam" data-i18n="devices.webcam">
+										Webcam
+									</option>
+									<option>
+										...
+									</option>
+								</select>
+							</div>
+							<div class="form-group" id="inputDeviceNameDiv">
+								<label for="inputDeviceName" data-i18n="modal.addCam.name.l">Device name</label> 
+								<input class="form-control" id="inputDeviceName" data-i18n="[placeholder]modal.addCam.name.i" placeholder="Введите имя устройства" type="text">
+							</div>
+							<div class="form-group" id="inputIPAdressDeviceDiv">
+								<label for="inputIPAdressDevice" data-i18n="modal.addCam.IP.l">Device IP</label> 
+								<input class="form-control" id="inputIPAdressDevice" data-i18n="[placeholder]modal.addCam.IP.i" placeholder="Enter device IP" required="" type="text">
+							</div>
+							<div class="form-group" id="inputIDDeviceDiv">
+								<label for="inputIDDevice" data-i18n="modal.addCam.ID.l">Device ID</label> 
+								<input class="form-control" id="inputIDDevice" data-i18n="[placeholder]modal.addCam.ID.i" placeholder="Enter device ID" required="" type="text">
+							</div>
+							<div class="form-group" id="inputLoginDeviceDiv">
+								<label for="inputLoginDevice" data-i18n="modal.addCam.login.l">Login</label> 
+								<input class="form-control" id="inputLoginDevice" data-i18n="[placeholder]modal.addCam.login.i" placeholder="Enter login" type="text">
+							</div>
+							<div class="form-group" id="inputPasswordDeviceDiv">
+								<label for="inputPasswordDevice" data-i18n="modal.addCam.password.l">Password</label> 
+								<input class="form-control" id="inputPasswordDevice" data-i18n="[placeholder]modal.addCam.password.i" placeholder="Enter password" type="password">
+								<span class="fa fa-fw toggle-password fa-eye-slash" toggle="#inputPasswordDevice"></span>
+							</div>
+							<div class="form-group" id="inputTrassirPublicDiv">
+								<label for="inputTrassirPublic" data-i18n="modal.addCam.trassir_public.l">Link to public viewing of device</label> 
+								<input class="form-control" id="inputTrassirPublic" data-i18n="[placeholder]modal.addCam.trassir_public.i" placeholder="Enter link to public viewing of device" type="text">
+							</div>
+						</form>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-success form-submit" id='addCamM' type="submit" data-i18n="buttons.add">Add</button>
+						<button class="btn btn-secondary" data-dismiss="modal" type="button" data-i18n="buttons.cancel">Cancel</button> 
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Global Settings Modal-->
+		<div aria-hidden="true" aria-labelledby="commonSettingsModalLabel" class="modal fade" id="commonSettingsModal" role="dialog" tabindex="-1">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="commonSettingsModalLabel" data-i18n="modal.gSettings.title">
+							Settings
+						</h5><button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true">×</span></button>
+					</div>
+					<div class="modal-body">
+						<form data-toggle="validator" id="commonSettingsForm" name="commonSettingsForm" role="form">
+							<div class="card inner-card">
+								<div class="card-header" id="timeHeader" aria-controls="collapseTime" aria-expanded="true" data-target="#collapseTime" data-toggle="collapse" data-i18n="modal.gSettings.time">
+									Storage time
+								</div>
+								<div id="collapseTime" aria-labelledby="timeHeader" class="collapse hide card-body inner-card-body">
+									<div class="form-group" id="inputStorageVideoDiv">
+										<label for="inputStorageVideo" data-i18n="modal.gSettings.video.l">Video storage time (days)</label> 
+										<input class="form-control" id="inputStorageVideo" max="30" min="1" data-i18n="[placeholder]modal.gSettings.video.i" placeholder="Video storage time" required="" step="1" type="number">
+									</div>
+								</div>
+							</div>
+							<div class="card inner-card">
+								<div class="card-header" id="natHeader" aria-controls="collapseNAT" aria-expanded="true" data-target="#collapseNAT" data-toggle="collapse" data-i18n="modal.gSettings.NATHeader">
+									Port forwarding
+								</div>
+								<div id="collapseNAT" aria-labelledby="natHeader" class="collapse hide card-body inner-card-body">
+									<div class="form-group">
+										<div class="custom-control custom-checkbox">
+											<input type="checkbox" class="custom-control-input" id="enableNAT" name="nat.enable">
+											<label class="custom-control-label" for="enableNAT" data-i18n="modal.gSettings.enableNAT">Enable port forwarding</label>
+										</div>
+
+									</div>
+									<div class="form-group" id="inputExternalPortDiv">
+										<label for="inputExternalPort" data-i18n="modal.gSettings.еxternalPort">External Port</label>
+										<input class="form-control" id="inputNATExternalPort" name="nat.externalPort" maxlength="20" type="text">
+									</div>
+									<div class="form-group" id="inputExternalPDiv">
+										<label for="inputExternalP" data-i18n="modal.gSettings.externalIP">External IP</label>
+										<input class="form-control" id="inputNATExternalIP" name="nat.externalIP" disabled="" type="text">
+									</div>
+								</div>
+							</div>
+							<div class="card inner-card">
+								<div class="card-header" id="UPnPHeader" aria-controls="collapseUPnP" aria-expanded="true" data-target="#collapseUPnP" data-toggle="collapse">
+									UPnP
+								</div>
+								<div id="collapseUPnP" aria-labelledby="UPnPHeader" class="hide collapse card-body inner-card-body">
+									<div class="form-group">
+										<div class="custom-control custom-checkbox">
+											<input type="checkbox" class="custom-control-input" id="enableUPnP" name="upnp.enable">
+											<label class="custom-control-label" for="enableUPnP" data-i18n="modal.gSettings.enableUPnP">Enable UPnP</label>
+										</div>
+									</div>
+									<div class="form-group" id="inputUPnPDeviceNameDiv">
+										<label for="inputUPnPDeviceName" data-i18n="modal.gSettings.deviceName">Device name</label>
+										<input class="form-control" id="inputUPnPDeviceName" name="upnp.deviceName" type="text" value="eVision">
+									</div>
+									<div class="form-group" id="networkUPnPSelectorDiv" style="display:none">
+										<label for="networkUPnPSelector" data-i18n="modal.gSettings.interface">Interface</label>
+										<select class="selectpicker form-control" id="networkUPnPSelector">
+											<option selected disabled="disabled" data-i18n="modal.gSettings.selectInterface">-- Select interface --</option>
+										</select>
+									</div>
+								</div>
+							</div>
+							<div class="card inner-card">
+								<div class="card-header" id="eiHeader" aria-controls="collapseEI" aria-expanded="true" data-target="#collapseEI" data-toggle="collapse" data-i18n="modal.gSettings.expimp">
+									Export/Import
+								</div>
+								<div id="collapseEI" aria-labelledby="eiHeader" class="collapse hide card-body inner-card-body">
+									<div class="row justify-content-center">
+										<div class="col-md-4 col-md-offset-4">
+											<div class="dropdown">
+												<button aria-expanded="false" aria-haspopup="true" class="btn btn-info dropdown-toggle" data-toggle="dropdown" 
+												id="exportDropdown"	style="margin: 5px;" type="button" data-i18n="modal.gSettings.export">Export</button>
+												<div aria-labelledby="exportDropdown" class="dropdown-menu">
+													<a class="dropdown-item" id="exportSettings" data-i18n="modal.gSettings.settings">Settings</a>
+													<a class="dropdown-item" id="exportDevices" data-i18n="modal.gSettings.devices">Devices</a>
+													<a class="dropdown-item" id="exportUsers" data-i18n="modal.gSettings.users">Users database</a>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-4 col-md-offset-4">
+											<div class="dropdown">
+												<button aria-expanded="false" aria-haspopup="true" class="btn btn-info dropdown-toggle" data-toggle="dropdown" 
+												id="importDropdown" style="margin: 5px;" type="button" data-i18n="modal.gSettings.import">Import</button>
+												<div aria-labelledby="importDropdown" class="dropdown-menu">
+													<a class="dropdown-item" id="importSettings" data-i18n="modal.gSettings.settings">Settings</a>
+													<a class="dropdown-item" id="importDevices" data-i18n="modal.gSettings.devices">Settings</a>
+													<a class="dropdown-item" id="importUsers" data-i18n="modal.gSettings.users">Users database</a>
+												</div>
+											</div>
+										</div>
+									</div><input accept="zip,application/octet-stream,application/zip,application/x-zip,application/x-zip-compressed" id="importUpload" style="display:none" type="file">
+								</div>
+							</div> 
+						</form>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-success form-submit" id='changeSettings' type="submit" data-i18n="buttons.apply">Apply</button>
+						<button class="btn btn-secondary" data-dismiss="modal" type="button" data-i18n="buttons.cancel">Cancel</button> 
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Conformation Modal-->
+		<div aria-hidden="true" aria-labelledby="confirmationModalLabel" class="modal fade" id="confirmationModal" role="dialog" tabindex="-1">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="restartModalLabel" data-i18n="modal.confirm.title">
+							Applying changes. Are you sure?
+						</h5><button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true">×</span></button>
+					</div>
+					<div class="modal-body"></div>
+					<div class="modal-footer">
+						<button class="btn btn-success cform-submit" type="button" data-i18n="buttons.continue">Continue</button>
+						<button class="btn btn-secondary" data-dismiss="modal" type="button" data-i18n="buttons.cancel">Cancel</button> 
+					</div>
+				</div>
+			</div>
+		</div>
+		<audio autoplay="autoplay" hidden controls="true" id="audio"></audio>
+		
+		<script> (function (w, d, u) { var s = d.createElement('script'); s.async = true; s.src = u + '?' + (Date.now() / 60000 | 0); var h = d.getElementsByTagName('script')[0]; h.parentNode.insertBefore(s, h); })(window, document, 'https://crm.digtlab.ru/upload/crm/site_button/loader_3_02zkar.js'); </script>
+		
+		<!-- Bootstrap core JavaScript-->
+		
+		<script src="vendor/jquery/jquery.min.js">
+		</script> 
+		<script src="vendor/jquery.imgareaselect/scripts/jquery.imgareaselect.min.js">
+		</script> 
+		<script src="vendor/bootstrap/js/bootstrap.bundle.min.js">
+		</script> 
+
+		<!-- Page level plugin JavaScript-->		 
+		<script src="vendor/bootstrap-table/bootstrap-table.js">
+		</script> 
+		<script src="vendor/bootstrap-table/bootstrap-table-export.js">
+		</script>
+		<script src="vendor/bootstrap-table/tableExport.js">
+		</script> 
+		<script src="vendor/bootstrap-table/locale/bootstrap-table-ru-RU.min.js">
+		</script>
+		<script src="vendor/bootstrap-table/locale/bootstrap-table-en-US.min.js">
+		</script>
+		<script src="vendor/vis/js/moment-with-locales.min.js">
+		</script> 
+		<script src="vendor/vis/js/vis-timeline-graph2d.min.js">
+		</script> 
+
+		<script src="vendor/i18next/i18next.min.js">
+		</script>
+		<script src="vendor/i18next/jquery-i18next.min.js">
+		</script>
+		<script src="js/lang.js">
+		</script>
+
+		<script src="vendor/daterangepicker/daterangepicker.min.js">
+		</script> 
+		<script src="vendor/select/bootstrap-select.min.js">
+		</script> 
+
+		<!-- Custom scripts for all pages-->	
+		<script src="js/sb-admin.js">
+		</script>
+
+		<!-- Custom scripts for this page--> 
+		<script src="js/sb-admin-datatables.js">
+		</script> 
+		<script src="js/videoarchive.js">
+		</script>
+
+	</body>
+</html>
