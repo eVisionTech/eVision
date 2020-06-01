@@ -19,35 +19,3 @@
 5. Скачайте [MongoDB Community Server](https://www.mongodb.com/download-center/community) (ZIP) и скопируйте содержимое архива в папку db.
 
 6. Запустите nw.exe
-
-### Linux
-##### Docker Image
-Пример `docker-compose.yml` файла:
-
-	version: '2'
-	services:
-	  evision:
-		build: .
-		image: evisioncontrol/evision:latest
-		container_name: evision
-		network_mode: "host"
-		restart: always
-		volumes:
-		  - '~/evision-data/:/home/evision/evision/data/'
-		  - '~/evision-data/media/:/home/evision/evision/media/'
-		  - '/etc/localtime:/etc/localtime:ro'
-		environment:
-		  MONGO_INITDB_DATABASE: evision
-		depends_on:
-		  - mongodb
-	  mongodb:
-		image: mongo:4-bionic
-		container_name: mongodb
-		restart: always
-		command: mongod
-		ports:
-			- 27017:27017
-		volumes:
-		  - '~/evision-data/data/db/:/data/db'
-		environment:
-			MONGO_INITDB_DATABASE: evision
