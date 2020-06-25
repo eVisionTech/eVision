@@ -1332,6 +1332,11 @@
                     else
                         $('#framerateSelector').prop('disabled', false);
 
+                    if (params.device.type == 'Webcam')
+                        $('#switchEVR, #adressVR').prop('disabled', true);
+                    else
+                        $('#switchEVR, #adressVR').prop('disabled', false);
+
                     populator(params);
 
                     $('#settings-form .selectpicker').selectpicker('refresh');
