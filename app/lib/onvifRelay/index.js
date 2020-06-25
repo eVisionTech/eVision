@@ -30,7 +30,7 @@ module.exports = function(params) {
             require('./nateks')(params);
         }
         else {
-            if (!params.relay.uri || !params.relay.username || !params.relay.password || !params.relay.token)
+            if (!params.relay.uri || !params.relay.username || !params.relay.password)
             return console.error('Onvif parametrs not found');
 
             let device = init();

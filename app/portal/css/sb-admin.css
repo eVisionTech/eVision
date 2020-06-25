@@ -692,7 +692,7 @@ body.sidenav-toggled .navbar-sidenav-tooltip.show {
 	.b24-widget-button-wrapper,
 	.navbar>.mb-auto,
 	#appName {
-		display: none
+		display: none !important;
 	}
 }
 .datepicker {
@@ -1482,5 +1482,45 @@ button.navbar-toggler:focus,
 /*toggle password visibility*/
 .toggle-password {
     position: absolute;
-    right: 22px;
+    right: 25px;
 }
+.form-group {
+    position: relative;
+}
+.form-group>.toggle-password {
+    bottom: 10px;
+    right: 10px;
+}
+/*close open lines*/
+.bx-close {
+    bottom: 90px;
+    right: 50px;
+    z-index: 10150;
+    width: 20px;
+    height: 20px;
+    border: 3px solid #ff5b55;
+    background-color: #fff;
+	border-radius: 50%;
+	animation: bx-close 1.5s ease-out forwards 1;
+}
+@keyframes bx-close {
+	0%{opacity: 0; transform:scale(0) rotate(45deg)}
+	30%{opacity: 1; transform:scale(1.2) rotate(0deg)}
+	63%{transform:scale(1)}
+	100%{transform:scale(1)}
+}
+.bx-close:before, .bx-close:after {
+  position: absolute;
+  left: calc(50% - 1px);
+  content: ' ';
+  height: 10px;
+  width: 2px;
+  background-color: #ff5b55;
+}
+.bx-close:before {
+  transform: rotate(45deg);
+}
+.bx-close:after {
+  transform: rotate(-45deg);
+}
+

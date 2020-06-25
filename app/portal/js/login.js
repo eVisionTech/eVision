@@ -1,6 +1,6 @@
 (function ($) {
     let theme = window.theme || 'dark'
-    let lang = window.lang || 'en-US'
+    let lang = window.lang || 'ru-RU'
 
     setTheme();
     initLocal(lang);

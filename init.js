@@ -9,7 +9,7 @@
     const updater = new AutoUpdater(require("../package.json"));
 
     var app, mongod, exitFlag;
-    var lang = 'en-US';
+    var lang = 'ru-RU';
     var theme;
     var started = false;
 

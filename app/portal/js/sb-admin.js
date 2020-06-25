@@ -109,6 +109,16 @@
         $input.attr('type', $input.attr("type") === 'text'?'password':'text');
     });
 
+    setTimeout(function () {
+        $('#bx-close').toggleClass('d-none d-flex');
+    }, 2000);
+
+    $('#bx-close').click(function(){
+        $(this).toggleClass('d-flex d-none');
+        $('.b24-widget-button-wrapper').hide();
+    });
+
+
     $('#infoModal').on('hidden.bs.modal', () => {
         $('#infoModal').find('.modal-header').html('<h5 class="modal-title" data-i18n="modal.info.title">'
             + i18next.t('modal.info.title')
@@ -301,6 +311,7 @@
             data: JSON.stringify(params),
             contentType: 'application/json',
             success: function () {
+                if (!window.webcamId && params.device.type=='Webcam') window.webcamId = params.id;
                 window.curNodeId = params.id;
                 initSettings();
             }
@@ -359,6 +370,7 @@
             data: JSON.stringify(params),
             contentType: 'application/json',
             success: function () {
+                if (params.id == window.webcamId) window.webcamId = '';
                 $('#cam_' + params.id).remove();
                 $('#removeCamModal').modal('hide');
                 if ($('.camNav .camBtn').length > 0) {
@@ -432,12 +444,18 @@
     }
 
     $('#addCamM').click(() => {
+        let $inputVal = $('#inputDevice').val();
         if (validInfo.ip ||         
-        $('#inputDevice').val() == i18next.t('devices.webcam') ||
-        $('#inputDevice').val() == 'TRASSIR Cloud') {
+            $inputVal == i18next.t('devices.webcam') ||
+            $inputVal == 'TRASSIR Cloud') {
+            if ($inputVal == i18next.t('devices.webcam') && window.webcamId) {
+                $('#infoModal').find('.modal-body').html(i18next.t('modal.info.singleWebcam'));
+                $('#infoModal').modal('show');
+                return;
+            }
             $("#addCamModal").modal('hide');
             let _device = 'None';
-            switch ($('#inputDevice').val()) {
+            switch ($inputVal) {
                 case i18next.t('modal.addCam.selectDevice'): break;
                 case i18next.t('devices.bewardSeries'): _device = 'Beward'; break;
                 case 'Beward (DKS15120)': _device = 'Beward_DKS15120'; break;

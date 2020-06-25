@@ -243,6 +243,7 @@ function initLocal(lang) {
 					modal: {
 						info: {
 							title: "Информация",
+							singleWebcam: "Невозможно добавить более одной веб-камеры!",
 							addDevice: "Невозможно добавить новое устройство!",
 							drive: "Пожалуйста, освободите не менее 10 GB на жестком диске для корректной работы приложения.",
 							RAM: "Доступно {{RAM}} ГБ оперативной памяти.",
@@ -323,8 +324,8 @@ function initLocal(lang) {
 								i: "Введите имя пользователя"
 							},
 							pass: {
-								l: "Пароль",
-								i: "Введите пароль"
+								l: "Новый пароль",
+								i: "Введите новый пароль"
 							}
 						},
 						scanDevices: {
@@ -712,6 +713,7 @@ function initLocal(lang) {
 					modal: {
 						info: {
 							title: "Information",
+							singleWebcam: "Unable to add more than one webcam!",
 							addDevice: "Unable to add new device!",
 							drive: "Please free at least 10 GB of hard disk space for the application to work correctly.",
 							RAM: "{{RAM}} GB RAM available.",

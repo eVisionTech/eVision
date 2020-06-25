@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 var SettingsSchema = new mongoose.Schema({
-    lang: { type: String, default: 'en-US' },
+    lang: { type: String, default: 'ru-RU' },
     theme: { type: String, default: 'dark' },
     storage: {
         video: { type: String, default: '3' }
