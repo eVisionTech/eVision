@@ -5,7 +5,8 @@
 const spawn = require('child_process').spawn
 	, EventEmitter = require('events').EventEmitter
 	, util = require('util')
-	, TRASSIR_Cloud = require('./trassir_cloud');
+	, TRASSIR_Cloud = require('./trassir_cloud')
+	, path = require('path')
 	;
 
 /**
@@ -48,6 +49,7 @@ util.inherits(FFMpeg, EventEmitter);
  * @type {string}
  */
 FFMpeg.cmd = 'ffmpeg';
+if (/^win/.test(process.platform)) FFMpeg.cmd = path.resolve(__dirname + '/../../../bin/ffmpeg');
 
 function newListener(event) {
 	if (event === 'data' && this.listeners(event).length === 0) {

@@ -4,6 +4,11 @@ const chokidar = require('chokidar');
 const enfsensure = require('enfsensure');
 const ffmpeg = require('fluent-ffmpeg');
 
+if (/^win/.test(process.platform)) {
+  ffmpeg.setFfmpegPath(path.resolve(__dirname + '/../../../bin/ffmpeg'));
+  ffmpeg.setFfprobePath(path.resolve(__dirname + '/../../../bin/ffprobe'));
+}
+
 let data_path = process.env.data_path || path.join(__dirname + '../../../data');
 
 const Video = require('../db/models/video');
@@ -120,7 +125,7 @@ module.exports = {
         const TRASSIR_Cloud = require('../rtsp2/trassir_cloud');
         TRASSIR_Cloud.get_video(nodeConf.videoRecording.uri, (err, new_url) => {
           if (err) return console.error(err);
-          if (!new_url && !processes[name].__end) {
+          if (!new_url && !processes[name]) {
             return setTimeout(function() {
               module.exports.startVideoRecorder(nodeConf);
             }, 5000);

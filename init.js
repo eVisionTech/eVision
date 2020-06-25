@@ -50,7 +50,7 @@
     }
 
     function restart() {
-        app = fork("./app/app.js", { silent: true, execPath: './app/node' }, {
+        app = fork("./app/app.js", { silent: true, execPath: './bin/node' }, {
             cwd: ".",
             env: {
                 PATH: process.env.PATH + ';' + process.cwd(),
