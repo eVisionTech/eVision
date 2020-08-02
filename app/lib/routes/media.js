@@ -10,6 +10,12 @@ const previewFps = 5;
 const previewWidth = 640;
 const previewHeight = 480;
 
+var icon_record;
+
+Canvas.loadImage('./portal/images/icon_record.png').then((image) => {
+    icon_record = image;
+});
+
 module.exports = function (app, conf, detectors) {
 
     var streams = {},
@@ -90,22 +96,8 @@ module.exports = function (app, conf, detectors) {
                                     binary: false
                                 });
                                 if (nodeConf.notif.enable && nodeConf.notif.motionDetection.enable) {
-                                    if (nodeConf.notif.motionDetection.notifMode == 'phrase' && nodeConf.notif.motionDetection.phrase) {
-                                        let nodeIndex = 1;
-                                        conf.nodes.forEach(function(item, i){
-                                              if (item.id == nodeConf.id)
-                                              nodeIndex = i + 1 
-                                         });
-
-                                        let phrase = nodeConf.notif.motionDetection.phrase;
-                                        phrase = phrase.replace(/{deviceName}/g, nodeConf.device.name);
-                                        phrase = phrase.replace(/{deviceNum}/g, nodeIndex);
-                                        
-                                        app.wss.broadcast('actionNotif|' + phrase.trim(), {
-                                            binary: false
-                                        });
-                                    } else if (nodeConf.notif.motionDetection.notifMode == 'file') {
-                                        app.wss.broadcast('actionNotif|motion.mp3' , {
+                                    if (nodeConf.notif.motionDetection.notifMode == 'phrase') {
+                                        app.wss.broadcast('actionNotif|motionP.mp3' , {
                                             binary: false
                                         });
                                     }
@@ -150,9 +142,16 @@ module.exports = function (app, conf, detectors) {
     }
 
     function preview() {
-        var _frames = [];
+        var _nodes = [];
         for (let node of conf.nodes)
-            if (node.id in frames) _frames.push(frames[node.id])
+            if (node.id in frames) {
+                _nodes.push({
+                    id: node.id, 
+                    frames: frames[node.id], 
+                    name: node.device.name.length > 10 ? node.device.name.substring(0,10) + '...' : node.device.name,
+                    videoRecording: node.videoRecording.enable
+                })
+            }
 
         let width = previewWidth;
         let height = previewHeight;
@@ -161,84 +160,180 @@ module.exports = function (app, conf, detectors) {
         var context = canvas.getContext('2d')
 
         context.imageSmoothingEnabled = true;
+        context.strokeStyle = '#fff';
+        context.lineWidth = 1;
+        context.fillStyle = '#000';
+        context.fillRect(0, 0, width, height);
+        context.fillStyle = '#fff';
+        context.font = '12px Georgia';
 
         try {
-            let _length = _frames.length;
+            let _length = _nodes.length;
 
             if (_length > 0 && _length <= 2) {
-                context.drawImage(_frames[0], 0, 0, width / 2, height);
-                if (_frames[1])
-                    context.drawImage(_frames[1], width / 2, 0, width / 2, height);
+                if (_nodes[0]) {
+                    console.log(_nodes[0])
+                    context.drawImage(_nodes[0].frames, 0, 0, width / 2, height);
+                    context.fillText(_nodes[0].name, 5, 15);
+                    if (_nodes[0].videoRecording) context.drawImage(icon_record, width / 2 - 25, 32, 15, 15);
+                }
+
+                context.strokeRect(0, 0, width / 2, height);
+
+                if (_nodes[1]) {
+                    context.drawImage(_nodes[1].frames, width / 2, 0, width / 2, height);
+                    context.fillText(_nodes[1].name, width / 2 + 5, 15);
+                    if (_nodes[1].videoRecording) context.drawImage(icon_record, width - 25, 32, 15, 15);
+                }
+
+                context.strokeRect(width / 2, 0, width / 2, height);
             }
 
             if (_length > 2 && _length <= 4) {
-                context.drawImage(_frames[0], 0, 0, width / 2, height / 2);
-                if (_frames[1])
-                    context.drawImage(_frames[1], width / 2, 0, width / 2, height / 2);
-                if (_frames[2])
-                    context.drawImage(_frames[2], 0, height / 2, width / 2, height / 2);
-                if (_frames[3])
-                    context.drawImage(_frames[3], width / 2, height / 2, width / 2, height / 2);
+                if (_nodes[0]) {
+                    context.drawImage(_nodes[0].frames, 0, 0, width / 2, height / 2);
+                    context.fillText(_nodes[0].name, 5, 15);
+                    if (_nodes[0].videoRecording) context.drawImage(icon_record, width / 2 - 25, 32, 15, 15);
+                }
+
+                context.strokeRect(0, 0, width / 2, height / 2);
+
+                if (_nodes[1]) {
+                    context.drawImage(_nodes[1].frames, width / 2, 0, width / 2, height / 2);
+                    context.fillText(_nodes[1].name, width / 2 + 5, 15);
+                    if (_nodes[1].videoRecording) context.drawImage(icon_record, width - 25, 32, 15, 15);
+                }
+
+                context.strokeRect(width / 2, 0, width / 2, height / 2);
+
+                if (_nodes[2]) {
+                    context.drawImage(_nodes[2].frames, 0, height / 2, width / 2, height / 2);
+                    context.fillText(_nodes[2].name, 5, height / 2 + 15);
+                    if (_nodes[2].videoRecording) context.drawImage(icon_record, width / 2 - 25, height / 2 + 32, 15, 15);
+                }
+
+                context.strokeRect(0, height / 2, width / 2, height / 2);
+
+                if (_nodes[3]) {
+                    context.drawImage(_nodes[3].frames, width / 2, height / 2, width / 2, height / 2);
+                    context.fillText(_nodes[3].name, width / 2 + 5, height / 2 + 15);
+                    if (_nodes[3].videoRecording) context.drawImage(icon_record, width - 25, height / 2 + 32, 15, 15);
+                }
+
+                context.strokeRect(width / 2, height / 2, width / 2, height / 2);
+
             }
 
             if (_length > 4 && _length <= 9) {
-                context.drawImage(_frames[0], 0, 0, width / 3, height / 3);
-                if (_frames[1])
-                    context.drawImage(_frames[1], width / 3, 0, width / 3, height / 3);
-                if (_frames[2])
-                    context.drawImage(_frames[2], width * 2 / 3, 0, width / 3, height / 3);
+                if (_nodes[0]) {
+                    context.drawImage(_nodes[0].frames,  0, 0, width / 3, height / 3);
+                    context.fillText(_nodes[0].name, 5, 15);
+                    if (_nodes[0].videoRecording) context.drawImage(icon_record, width / 3 - 25, 32, 15, 15);
+                }
 
-                if (_frames[3])
-                    context.drawImage(_frames[3], 0, height / 3, width / 3, height / 3);
-                if (_frames[4])
-                    context.drawImage(_frames[4], width / 3, height / 3, width / 3, height / 3);
-                if (_frames[5])
-                    context.drawImage(_frames[5], width * 2 / 3, height / 3, width / 3, height / 3);
+                context.strokeRect(0, 0, width / 3, height / 3);
 
-                if (_frames[6])
-                    context.drawImage(_frames[6], 0, height * 2 / 3, width / 3, height / 3);
-                if (_frames[7])
-                    context.drawImage(_frames[7], width / 3, height * 2 / 3, width / 3, height / 3);
-                if (_frames[8])
-                    context.drawImage(_frames[8], width * 2 / 3, height * 2 / 3, width / 3, height / 3);
+                if (_nodes[1]) {
+                    context.drawImage(_nodes[1].frames, width / 3, 0, width / 3, height / 3);
+                    context.fillText(_nodes[1].name, width / 3 + 5, 15);
+                    if (_nodes[1].videoRecording) context.drawImage(icon_record, width * 2 / 3 - 25, 32, 15, 15);
+                }
 
+                context.strokeRect(width / 3, 0, width / 3, height / 3);
+
+                if (_nodes[2]) {
+                    context.drawImage(_nodes[2].frames, width * 2 / 3, 0, width / 3, height / 3);
+                    context.fillText(_nodes[2].name, width * 2 / 3 + 5, 15);
+                    if (_nodes[2].videoRecording) context.drawImage(icon_record, width - 25, 32, 15, 15);
+                }
+
+                context.strokeRect(width * 2 / 3, 0, width / 3, height / 3);
+
+                if (_nodes[3]) {
+                    context.drawImage(_nodes[3].frames, 0, height / 3, width / 3, height / 3);
+                    context.fillText(_nodes[3].name, 5, height / 3 + 15);                
+                    if (_nodes[3].videoRecording) context.drawImage(icon_record, width / 3 - 25, height / 3 + 32, 15, 15);
+                }
+
+                context.strokeRect(0, height / 3, width / 3, height / 3);
+
+                if (_nodes[4]) {
+                    context.drawImage(_nodes[4].frames, width / 3, height / 3, width / 3, height / 3);
+                    context.fillText(_nodes[4].name, width / 3 + 5, height / 3 + 15);
+                    if (_nodes[4].videoRecording) context.drawImage(icon_record, width * 2 / 3 - 25, height / 3 + 32, 15, 15);
+                }
+
+                context.strokeRect(width / 3, height / 3, width / 3, height / 3);
+
+                if (_nodes[5]) {
+                    context.drawImage(_nodes[5].frames, width * 2 / 3, height / 3, width / 3, height / 3);
+                    context.fillText(_nodes[5].name, width * 2 / 3 + 5, height / 3 + 15);
+                    if (_nodes[5].videoRecording) context.drawImage(icon_record, width - 25, height / 3 + 32, 15, 15);
+                }
+
+                context.strokeRect(width * 2 / 3, height / 3, width / 3, height / 3);
+
+                if (_nodes[6]) {
+                    context.drawImage(_nodes[6].frames, 0, height * 2 / 3, width / 3, height / 3);
+                    context.fillText(_nodes[6].name, 5, height * 2 / 3 + 15);
+                    if (_nodes[6].videoRecording) context.drawImage(icon_record, width / 3 - 25, height * 2 / 3 + 32, 15, 15);
+                }
+
+                context.strokeRect(0, height * 2 / 3, width / 3, height / 3);
+
+                if (_nodes[7]) {
+                    context.drawImage(_nodes[7].frames, width / 3, height * 2 / 3, width / 3, height / 3);
+                    context.fillText(_nodes[7].name, width / 3 + 5, height * 2 / 3 + 15);
+                    if (_nodes[7].videoRecording) context.drawImage(icon_record, width * 2 / 3 - 25, height * 2 / 3 + 32, 15, 15);
+                }
+
+                context.strokeRect(width / 3, height * 2 / 3, width / 3, height / 3);
+
+                if (_nodes[8]) {
+                    context.drawImage(_nodes[8].frames, width * 2 / 3, height * 2 / 3, width / 3, height / 3);
+                    context.fillText(_nodes[8].name, width * 2 / 3 + 5, height * 2 / 3 + 15);
+                    if (_nodes[8].videoRecording) context.drawImage(icon_record, width - 25, height * 2 / 3 + 32, 15, 15);
+                }
+
+                context.strokeRect(width * 2 / 3, height * 2 / 3, width / 3, height / 3);
             }
 
             if (_length > 9 && _length <= 16) {
-                context.drawImage(_frames[0], 0, 0, width / 4, height / 4);
-                if (_frames[1])
-                    context.drawImage(_frames[1], width / 4, 0, width / 4, height / 4);
-                if (_frames[2])
-                    context.drawImage(_frames[2], width * 2 / 4, 0, width / 4, height / 4);
-                if (_frames[3])
-                    context.drawImage(_frames[3], width * 3 / 4, 0, width / 4, height / 4);
+                if (_nodes[0]) 
+                    context.drawImage(_nodes[0].frames, 0, 0, width / 4, height / 4);
+                if (_nodes[1])
+                    context.drawImage(_nodes[1].frames, width / 4, 0, width / 4, height / 4);
+                if (_nodes[2])
+                    context.drawImage(_nodes[2].frames, width * 2 / 4, 0, width / 4, height / 4);
+                if (_nodes[3])
+                    context.drawImage(_nodes[3].frames, width * 3 / 4, 0, width / 4, height / 4);
 
-                if (_frames[4])
-                    context.drawImage(_frames[4], 0, height / 4, width / 4, height / 4);
-                if (_frames[5])
-                    context.drawImage(_frames[5], width / 4, height / 4, width / 4, height / 4);
-                if (_frames[6])
-                    context.drawImage(_frames[6], width * 2 / 4, height / 4, width / 4, height / 4);
-                if (_frames[7])
-                    context.drawImage(_frames[7], width * 3 / 4, height / 4, width / 4, height / 4);
+                if (_nodes[4])
+                    context.drawImage(_nodes[4].frames, 0, height / 4, width / 4, height / 4);
+                if (_nodes[5])
+                    context.drawImage(_nodes[5].frames, width / 4, height / 4, width / 4, height / 4);
+                if (_nodes[6])
+                    context.drawImage(_nodes[6].frames, width * 2 / 4, height / 4, width / 4, height / 4);
+                if (_nodes[7])
+                    context.drawImage(_nodes[7].frames, width * 3 / 4, height / 4, width / 4, height / 4);
 
-                if (_frames[8])
-                    context.drawImage(_frames[8], 0, height * 2 / 4, width / 4, height / 4);
-                if (_frames[9])
-                    context.drawImage(_frames[9], width / 4, height * 2 / 4, width / 4, height / 4);
-                if (_frames[10])
-                    context.drawImage(_frames[10], width * 2 / 4, height * 2 / 4, width / 4, height / 4);
-                if (_frames[11])
-                    context.drawImage(_frames[11], width * 3 / 4, height * 2 / 4, width / 4, height / 4);
+                if (_nodes[8])
+                    context.drawImage(_nodes[8].frames, 0, height * 2 / 4, width / 4, height / 4);
+                if (_nodes[9])
+                    context.drawImage(_nodes[9].frames, width / 4, height * 2 / 4, width / 4, height / 4);
+                if (_nodes[10])
+                    context.drawImage(_nodes[10].frames, width * 2 / 4, height * 2 / 4, width / 4, height / 4);
+                if (_nodes[11])
+                    context.drawImage(_nodes[11].frames, width * 3 / 4, height * 2 / 4, width / 4, height / 4);
 
-                if (_frames[12])
-                    context.drawImage(_frames[12], 0, height * 3 / 4, width / 4, height / 4);
-                if (_frames[13])
-                    context.drawImage(_frames[13], width / 4, height * 3 / 4, width / 4, height / 4);
-                if (_frames[14])
-                    context.drawImage(_frames[14], width * 2 / 4, height * 3 / 4, width / 4, height / 4);
-                if (_frames[15])
-                    context.drawImage(_frames[15], width * 3 / 4, height * 3 / 4, width / 4, height / 4);
+                if (_nodes[12])
+                    context.drawImage(_nodes[12].frames, 0, height * 3 / 4, width / 4, height / 4);
+                if (_nodes[13])
+                    context.drawImage(_nodes[13].frames, width / 4, height * 3 / 4, width / 4, height / 4);
+                if (_nodes[14])
+                    context.drawImage(_nodes[14].frames, width * 2 / 4, height * 3 / 4, width / 4, height / 4);
+                if (_nodes[15])
+                    context.drawImage(_nodes[15].frames, width * 3 / 4, height * 3 / 4, width / 4, height / 4);
             }
 
         } catch (e) { console.log(e) }

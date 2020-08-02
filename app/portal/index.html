@@ -7,7 +7,7 @@
 		<meta content="" name="description">
 		<meta content="" name="author">
 		<title>
-			eVision 3.3.0
+			eVision 3.3.8
 		</title><!-- Bootstrap core CSS-->
 		<link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet"><!-- Custom fonts for this template-->
 		<link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"><!-- Page level plugin CSS-->
@@ -215,7 +215,7 @@
 											</ul>
 										</nav>
 										<div class="form-inline mt-2">
-											<button class="bd-save btn btn-success form-submit" id='settings-save' type="submit"
+											<button class="bd-save btn btn-success" id="settings-save" type="button"
 												data-i18n="settings.save">Save</button>
 											<button class="btn btn-link bd-search-toggle d-md-none p-0 ml-3" type="button" data-toggle="collapse"
 												data-target="#bd-nav" aria-controls="bd-nav" aria-expanded="false" aria-label="Toggle navigation">
@@ -631,16 +631,6 @@
 																			</select>
 																		</div>
 																	</div>
-																	<div class="row flex-xl-nowrap MN-custom" id="settings-MNPhrase">
-																		<div class="col-12 col-md-5 col-xl-4">
-																			<p class="setting-key" data-i18n="settings.voice.notifications.phrase.l">Phrase</p>
-																		</div>
-																		<div class="col-12 col-md-7 col-xl-8 setting-value">
-																			<input class="form-control" type="text" placeholder="Enter phrase"
-																				name="notif.motionDetection.phrase" maxlength="60"
-																				data-i18n="[placeholder]settings.voice.notifications.phrase.i">
-																		</div>
-																	</div>
 																	<div class="row flex-xl-nowrap MN-custom" id="settings-MNAudio">
 																		<div class="col-12 col-md-5 col-xl-4">
 																			<p class="setting-key" data-i18n="settings.voice.notifications.file.l">Audio file</p>
@@ -848,6 +838,26 @@
 					</div>
 					<div class="modal-footer">
 						<button class="btn btn-success restartCamBtn" type="button" data-i18n="buttons.ok">OK</button> 
+						<button class="btn btn-secondary" data-dismiss="modal" type="button" data-i18n="buttons.cancel">Cancel</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Save Settings Modal-->
+		<div aria-hidden="true" aria-labelledby="saveSettingsModalLabel" class="modal fade" id="saveSettingsModal" role="dialog" tabindex="-1">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="saveSettingsLabel" data-i18n="modal.saveSettings.title">
+							Save settings?
+						</h5><button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true">×</span></button>
+					</div>
+					<div class="modal-body">						
+						<div data-i18n="modal.saveSettings.body">Select "OK" to save settings and reboot the device</div>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-success saveSettingsBtn" type="button" data-i18n="buttons.ok">OK</button> 
 						<button class="btn btn-secondary" data-dismiss="modal" type="button" data-i18n="buttons.cancel">Cancel</button>
 					</div>
 				</div>

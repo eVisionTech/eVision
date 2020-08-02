@@ -81,7 +81,7 @@ function initCreate() {
 
   promises.push(
     new Promise((resolve, reject) => {
-      let audioFiles = ['motion.mp3', 'objectR.mp3', 'objectU.mp3'];
+      let audioFiles = ['motion.mp3', 'motionP.mp3'];
       audioFiles = audioFiles.filter(file => {
         if (fs.existsSync(path.resolve(data_path, 'media', file))) {
           return false;
@@ -89,10 +89,10 @@ function initCreate() {
       });
       
       audioFiles.forEach(file => {
-        let pth = path.resolve(data_path, '..', 'portal', 'media', file)
+        let pth = path.resolve(data_path, '..', 'media', file)
         if (IS_WIN)
-          pth =  path.resolve(__dirname, 'portal', 'media', file)
-        fs.move(pth, path.resolve(data_path, 'media', file), { overwrite : true }, (err) => {
+          pth =  path.resolve(__dirname, 'media', file)
+        fs.copy(pth, path.resolve(data_path, 'media', file), { overwrite : true }, (err) => {
           if (err) return reject(err);
         });
       });
@@ -186,7 +186,9 @@ function restartNode(params, cb) {
   detectors.onStart(_detector);
   _detector.start();
 
-  if (nodeConf.videoRecording.enable && oldNodeConf.videoRecording.uri != nodeConf.videoRecording.uri) {
+  if (!oldNodeConf.videoRecording.enable && nodeConf.videoRecording.enable) {
+    videoArchive.startVideoRecorder(nodeConf, processes);
+  } else if (nodeConf.videoRecording.enable && oldNodeConf.videoRecording.uri != nodeConf.videoRecording.uri) {
     videoArchive.deleteVideoRecorder(nodeConf.id, processes, () => {
       videoArchive.startVideoRecorder(nodeConf, processes);
     });    
@@ -194,8 +196,6 @@ function restartNode(params, cb) {
     videoArchive.deleteVideoRecorder(nodeConf.id, processes, () => {
       videoArchive.startVideoRecorder(nodeConf, processes);
     });
-  } else if (!oldNodeConf.videoRecording.enable && nodeConf.videoRecording.enable) {
-    videoArchive.startVideoRecorder(nodeConf, processes);
   }
 
   require('./lib/stream');

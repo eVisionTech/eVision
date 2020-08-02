@@ -43,6 +43,9 @@ module.exports = {
             preCreate: (req, res, next) => {
                 req.body = require('../settings')(req.body)
                 return next();
+            },
+            preUpdate: (req, res, next) => {
+                if (req.body.relay.uri) req.body = require('../settings')(req.body)
             }
         });
         

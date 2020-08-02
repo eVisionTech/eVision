@@ -1503,24 +1503,61 @@ button.navbar-toggler:focus,
 	border-radius: 50%;
 	animation: bx-close 1.5s ease-out forwards 1;
 }
+.bx-close:after {
+	content: ' ';
+	background-color: #ff5b55;
+	border-radius: 2px;
+	margin: 6px 2px;
+	height: 2.5px;
+	width: 10px;
+}
+.bx-open {
+    bottom: 50px;
+    right: 0px;
+    z-index: 10150;
+    width: 10px;
+    height: 66px;
+    background-color: #ff5b55;
+    border-radius: 6px 0 0 6px;
+    animation: bx-open 1.5s ease-out forwards 1;
+}
+.bx-close.bx-disable {
+	animation: bx-disable .3s ease-out forwards 1;
+}
+
 @keyframes bx-close {
 	0%{opacity: 0; transform:scale(0) rotate(45deg)}
 	30%{opacity: 1; transform:scale(1.2) rotate(0deg)}
 	63%{transform:scale(1)}
 	100%{transform:scale(1)}
 }
-.bx-close:before, .bx-close:after {
-  position: absolute;
-  left: calc(50% - 1px);
-  content: ' ';
-  height: 10px;
-  width: 2px;
-  background-color: #ff5b55;
+@keyframes bx-open {
+	0%{opacity: 0; transform:scale(0)}
+	30%{opacity: 1; transform:scale(1.2)}
+	63%{transform:scale(1)}
+	100%{transform:scale(1)}
 }
-.bx-close:before {
-  transform: rotate(45deg);
-}
-.bx-close:after {
-  transform: rotate(-45deg);
+@keyframes bx-disable {
+	0% {transform: scale(1) translate(0, 0)}
+	50% {transform: scale(.5) translate(0, -200px)}
+	93% {transform: scale(0) translate(0, -400px)}
+	100% {transform: scale(0) translate(0, -600px)}
 }
 
+/*camera icons*/
+.camContainer {
+    position: absolute;
+    display: flex;
+    width: 39px;
+    margin: auto;
+    left: 0;
+    right: 0;
+	bottom: 2px;
+	color: inherit;
+    justify-content: center;
+}
+.camCloud {
+    font-size: 10px;
+    left: 32px;
+    bottom: -2px;
+}

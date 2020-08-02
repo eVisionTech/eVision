@@ -61,13 +61,12 @@ var DeviceSchema = new mongoose.Schema({
                 type: String,
                 enum : ['phrase', 'file'],
                 default: 'phrase'
-            },
-            phrase: { type: String, default: 'Обнаружено движение на камере {deviceNum} {deviceName}' }
+            }            
         }
     },
     event: {
         time: { type: String, default: '7:00-20:00' },
-        weekend: { type: Boolean, default: 'false' },
+        weekend: { type: Boolean, default: 'true' },
     },
     cloud: {
         enable: { type: Boolean, default: 'false' },

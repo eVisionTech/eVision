@@ -5,7 +5,7 @@ module.exports = function (params, app) {
 
     var active = false;
     var autoReconnectInterval = 2000,
-        url = 'wss://media.evision.tech/stream/?id=' + params.id;
+        url = 'wss://media.evision.tech/stream?id=' + params.id + '&type=' + (params.relay.uri ? 1 : 0) + '&ver=' + conf.version;
 
     var client = new WebSocketClient();
     client.autoReconnectInterval = autoReconnectInterval;
@@ -31,7 +31,10 @@ module.exports = function (params, app) {
             if ('show' in res) {
                 app.wss.broadcast('actionShow|' + params.id, { binary: false });
             }
-        } catch (e) { console.log(e) }
+        } catch (e) { 
+            console.log(e)
+            app.wss.broadcast(message, { binary: false });
+        }
     };
 
     setInterval(function () {

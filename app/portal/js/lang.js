@@ -161,10 +161,6 @@ function initLocal(lang) {
 									p: "Фраза",
 									f: "Файл"
 								},
-								phrase: {
-									l: "Фраза",
-									i: "Введите фразу оповещения"
-								},
 								file: {
 									i: "Аудио файл",
 									l: "Выберите файл"
@@ -250,6 +246,7 @@ function initLocal(lang) {
 							CPU: "Загрузка процессора составляет {{CPU}}%.",
 							closeApps: "Пожалуйста, закройте неиспользуемые в данный момент программы и приложения.",
 							getData: "Не удалось получить данные!",
+							addDeviceName: "Необходимо ввести имя устройства!",
 							wrongIP: "Введен некорректный IP-адрес устройства!",
 							wrongParams: "Один или несколько параметров введены не верно!",
 							vidStorMax: "Максимальное время хранения видео 30 суток!",
@@ -298,7 +295,10 @@ function initLocal(lang) {
 						rebootCam: {
 							title: "Перезагрузить устройство?",
 							body: "Выберите \"ОК\", если вы готовы перезагрузить устройство",
-							settings: "Настройки успешно сохранены!"
+						},
+						saveSettings: {
+							title: "Сохранить настройки?",
+							body: "Выберите \"ОК\", чтобы сохранить настройки и перезагрузить устройство"							
 						},
 						restart: {
 							title: "Перезагрузка. Вы уверены?",
@@ -631,10 +631,6 @@ function initLocal(lang) {
 									p: "Phrase",
 									f: "File"
 								},
-								phrase: {
-									l: "Phrase",
-									i: "Enter notification phrase"
-								},
 								file: {
 									i: "Audio file",
 									l: "Select file"
@@ -720,6 +716,7 @@ function initLocal(lang) {
 							CPU: "CPU usage is {{CPU}}%.",
 							closeApps: "Please close currently unused programs and applications.",
 							getData: "Failed to get data!",
+							addDeviceName: "Device name is required!",
 							wrongIP: "Incorrect device IP entered!",
 							wrongParams: "One or more parameters entered incorrectly!",
 							alrCrop: "You are already using the Crop function!",
@@ -761,8 +758,11 @@ function initLocal(lang) {
 						},
 						rebootCam: {
 							title: "Reboot device?",
-							body: "Select \"ОК\" when you are ready to reboot the device",
-							settings: "Settings saved successfully!"
+							body: "Select \"ОК\" when you are ready to reboot the device"
+						},
+						saveSettings: {
+							title: "Save settings?",
+							body: "Select \"ОК\" to save settings and reboot the device"
 						},
 						restart: {
 							title: "Restarting. Are you sure?",

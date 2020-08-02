@@ -90,6 +90,7 @@ module.exports = {
 
   startVideoRecorder: function (nodeConf, processes) {
     let name = 'video_' + nodeConf.id;
+    if (!processes[name]) processes[name] = {};
     let cwd = path.resolve(data_path, 'videos', nodeConf.id, 'temp');
 
     function createFFMpegProc(url) {
@@ -109,12 +110,17 @@ module.exports = {
               })
               .on('error', (err) => {
                 if (err) console.error(err.message);
-                if (processes[name] && !processes[name].__end) module.exports.startVideoRecorder(nodeConf);
-                delete processes[name];
+                processes[name].retry ? processes[name].retry++ : processes[name].retry = 1;
+                if (processes[name] && processes[name].proc && !processes[name].end && processes[name].retry <= 5) module.exports.startVideoRecorder(nodeConf, processes);
+                if (processes[name] && processes[name].retry > 5) {
+                  setTimeout(function () {
+                    processes[name].retry = 1;
+                    module.exports.startVideoRecorder(nodeConf, processes);
+                  }, 1000 * 60 * 10)
+                }
               })
               .on('end', (a) => {
-                if (processes[name] && !processes[name].__end) module.exports.startVideoRecorder(nodeConf);
-                delete processes[name];
+                if (processes[name] && processes[name].proc && !processes[name].end) module.exports.startVideoRecorder(nodeConf, processes);
               })
               .save(path.resolve(cwd, '%Y%m%d-%H%M%S.mp4'));
     }
@@ -125,16 +131,16 @@ module.exports = {
         const TRASSIR_Cloud = require('../rtsp2/trassir_cloud');
         TRASSIR_Cloud.get_video(nodeConf.videoRecording.uri, (err, new_url) => {
           if (err) return console.error(err);
-          if (!new_url && !processes[name]) {
+          if (!new_url && !processes[name].proc) {
             return setTimeout(function() {
               module.exports.startVideoRecorder(nodeConf);
             }, 5000);
           } else {
-            processes[name] = createFFMpegProc(new_url)
+            processes[name].proc = createFFMpegProc(new_url);
           }
         });
       } else {
-        processes[name] = createFFMpegProc(nodeConf.videoRecording.uri)
+        processes[name].proc = createFFMpegProc(nodeConf.videoRecording.uri);
       }
     });
   },
@@ -142,9 +148,9 @@ module.exports = {
   deleteVideoRecorder: function (id, processes, cb) {
     let name = 'video_' + id;
     console.log(name, 'stopped');
-    processes[name].__end = true;
+    processes[name].end = true;
     setTimeout(() => {
-      processes[name].ffmpegProc.stdin.write('q');
+      processes[name].proc.ffmpegProc.stdin.write('q');
       delete processes[name];
       if (cb) cb();
     }, 2500);

@@ -39,7 +39,7 @@ function exportCollection(app, res, collections, folders) {
         `--collection=${collection}`
       ].join(' ');
   
-      exec(mongoexport, (err, stdout, stderr) => {
+      exec(mongoexport,  { maxBuffer: 1024 * 1024 * 100 }, (err, stdout, stderr) => {
         if (err) return reject(err);
         if (stderr) console.log(stderr);
              

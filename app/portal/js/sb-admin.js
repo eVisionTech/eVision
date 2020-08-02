@@ -109,14 +109,25 @@
         $input.attr('type', $input.attr("type") === 'text'?'password':'text');
     });
 
-    setTimeout(function () {
-        $('#bx-close').toggleClass('d-none d-flex');
+    var bxInterval = setInterval(function () {
+        if (window.BX.SiteButton.isShown) {
+            clearInterval(bxInterval);
+            $('#bx-close').toggleClass('d-none d-flex');
+            window.BX.SiteButton.addEventHandler('hide', ()=> $('#bx-close').addClass('bx-disable'));
+            window.BX.SiteButton.addEventHandler('show', ()=> $('#bx-close').removeClass('bx-disable'));
+        }
     }, 2000);
 
-    $('#bx-close').click(function(){
-        $(this).toggleClass('d-flex d-none');
-        $('.b24-widget-button-wrapper').hide();
+    $('#bx-close').click(function() {
+        if ($(this).hasClass('bx-close'))  {
+            $('.b24-widget-button-shadow').click();
+            if ($('.bx-livechat-show') && window.BX && window.BX.LiveChat) window.BX.LiveChat.closeLiveChat();
+            window.BX.SiteButton.hide();
+        }
+        else window.BX.SiteButton.show();
+        $(this).toggleClass('bx-open bx-close');
     });
+
 
 
     $('#infoModal').on('hidden.bs.modal', () => {
@@ -185,9 +196,9 @@
         let res = resAvailable();
         if (res.status) {
             if (res.length) {
-                $('#infoModal').on('hidden.bs.modal', () => {
+                $('#infoModal').on('hidden.bs.modal.res', () => {
                     $('#scanCamModal').modal('show');
-                    $('#infoModal').off('hidden.bs.modal');
+                    $('#infoModal').off('hidden.bs.modal.res');
                 });
             }
             else $('#scanCamModal').modal('show');
@@ -199,9 +210,9 @@
         let res = resAvailable();
         if (res.status) {
             if (res.length) {
-                $('#infoModal').on('hidden.bs.modal', () => {
+                $('#infoModal').on('hidden.bs.modal.res', () => {
                     $('#addCamModal').modal('show');
-                    $('#infoModal').off('hidden.bs.modal');
+                    $('#infoModal').off('hidden.bs.modal.res');
                 });
             }
             else $('#addCamModal').modal('show');
@@ -391,7 +402,7 @@
             data: JSON.stringify(params),
             contentType: 'application/json',
             success: function () {
-                $('#restartCamModal').modal('hide');
+                $('#restartCamModal, #saveSettingsModal').modal('hide');
                 setTimeout(initSettings, 500);
             }
         })
@@ -433,9 +444,6 @@
                     $('#scanInputIPAdressDevice').removeAttr('style');
                 }
             });
-        } else {
-            $('#infoModal').find('.modal-body').html(i18next.t('modal.info.wrongIP'));
-            $('#infoModal').modal('show');
         }
     });
 
@@ -445,7 +453,10 @@
 
     $('#addCamM').click(() => {
         let $inputVal = $('#inputDevice').val();
-        if (validInfo.ip ||         
+        if ($('#inputDeviceName').val().trim().length == 0) {
+            $('#infoModal').find('.modal-body').html(i18next.t('modal.info.addDeviceName'));
+            $('#infoModal').modal('show');
+        } else if (validInfo.ip ||
             $inputVal == i18next.t('devices.webcam') ||
             $inputVal == 'TRASSIR Cloud') {
             if ($inputVal == i18next.t('devices.webcam') && window.webcamId) {
@@ -561,6 +572,14 @@
                 stopNode({ id: id })
             }
         });        
+    });
+
+    $('#settings-save').click(() => {
+        $('#saveSettingsModal').modal('show')
+    })
+
+    $('.saveSettingsBtn').click(() => {
+        $('#settings-form').submit();
     });
 
     $('.restartCamBtn').click(() => {
@@ -715,8 +734,7 @@
             el.show().find('input, select').prop('disabled', false);
         }
         switch (selected) {
-            case 'phrase':
-                sEnable($('#settings-MNPhrase'));
+            case 'phrase':                
                 break;
             case 'file':
             default:
@@ -822,38 +840,7 @@
 
     window.WebSocket = window.WebSocket || window.MozWebSocket;
 
-    var socket;
-    
-    function tts(text, speaker, cb) {
-        var audioFileUrl = 'https://tts.voicetech.yandex.net/tts?speaker=' + (speaker || 'omazh') + '&format=mp3&lang=ru_RU&text=' + text;
-        try {
-            var reReadItem = JSON.parse(localStorage.getItem('cache_' + audioFileUrl));
-            if (cb) cb(reReadItem.src)
-            return;
-        } catch (e) { };
-
-        fetch(audioFileUrl)
-            .then(function (res) {
-                res.blob().then(function (blob) {
-                    var size = blob.size;
-                    var type = blob.type;
-                    var reader = new FileReader();
-                    reader.addEventListener("loadend", function () {
-                        var base64FileData = reader.result.toString();
-                        var mediaFile = {
-                            fileUrl: audioFileUrl,
-                            size: blob.size,
-                            type: blob.type,
-                            src: base64FileData
-                        };
-                        // save the file info to localStorage
-                        localStorage.setItem('cache_' + audioFileUrl, JSON.stringify(mediaFile));
-                        if (cb) cb(mediaFile.src)
-                    });
-                    reader.readAsDataURL(blob);
-                });
-            });
-    }
+    var socket;    
 
     const audioControl = document.getElementById('audio');
     window.audioBusy = false;
@@ -868,8 +855,6 @@
         window.audioBusy = true;
         if (/mp3$/.test(phrase)) 
             audioControl.src = '/media/'+ phrase + '?t=' + new Date().getTime();
-        else     
-            tts(phrase, 'omazh', function (src) { audioControl.src = src })
     }
     
 	const socketOpenListener = (e) => {
@@ -1102,11 +1087,16 @@
                 err = true;
             }
         }
+        if (params.device.name.length == 0) {
+            $msg.append(i18next.t('modal.info.addDeviceName'));
+            err = true;
+        }
         if (err) {
             $('#infoModal').modal('show');
             return;
         }
         saveParams(params, true);
+        restartNode(params);
     }
 
     function saveParams(_params, reload) {
@@ -1132,15 +1122,10 @@
                 } else if (_params.id) {
                     params = json;
                     if (reload) {
-                        $('#restartCamModal').find('.modal-body').html(
-                            i18next.t('modal.rebootCam.settings')
-                            + '<br>'
-                            + i18next.t('modal.rebootCam.body')
-                        );
-                        $('#restartCamModal').modal('show');
+                        // $('#saveSettingsModal').modal('show');
                         let ias = $('img#videoCam').imgAreaSelect({ instance: true });
                             ias.setOptions({ hide: true });
-                            ias.update();                        
+                            ias.update();
                     }
                 } else {
                     $("#commonSettingsModal").modal('hide');
@@ -1225,11 +1210,10 @@
                     $('#navbarResponsive ul.camNav').append(
                         '<li class="nav-item" id="cam_' + item.id + '" data-url="/api/v1/Stream/' + item.id + '">' +
                         '<button class="camBtn new mr-lg-2 btn btn-outline-primary" data-i18n="[data-original-title]tabs.camera.deviceD" title="" data-i18n-options="{device:' + nodeIndx + '}" data-original-title="'
-                        + i18next.t('tabs.camera.deviceD', {
-                            device: nodeIndx
-                        })
                         + '"><i class="fa fa-video-camera"></i><span class="camInfo">'
-                        + nodeIndx + '</span></button>' + '</li>');
+                        + nodeIndx + '</span><span class="camContainer"><i '
+                        + (item.cloud.enable ? '' : 'style="display:none" ')
+                        + 'class="camRecording fa fa-fw fa-video-camera"></i></span></button></li>');
                     $('.camBtn.new').data({ 'i18n-options': { device: nodeIndx } }).tooltip({ trigger: 'hover' });
                     updateCamBtn($('.camBtn.new'));
                     $('.camBtn.new').removeClass('new');
@@ -1260,6 +1244,7 @@
                 if (window.onReloadSettings)
                     window.onReloadSettings.forEach((item) => { if (typeof item === 'function') item(params) });
 
+                if (params.device.uri == "webcam") window.webcamId = params.id;
                 if (!params.active && currentnodeId == window.curNodeId) {
                     if (params.videoRecording.enable)
                         $('#videoCamError').html(i18next.t('tabs.camera.disBut'))

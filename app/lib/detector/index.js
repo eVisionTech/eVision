@@ -51,12 +51,13 @@ function start() {
             },
             encoding: null
         }, function (err, res, body) {
+            if (that.stopped) return;
             if (err) {
                 console.error(err)
                 return setTimeout(mJpegRestart.bind(that), 5000);
             }
             onFrameData(body);
-            if (params.active && !that.stopped)
+            if (params.active)
                 nextJpeg.bind(that)();
         });
     }
